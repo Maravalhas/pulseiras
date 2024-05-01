@@ -1,0 +1,54 @@
+.aside {
+  position: absolute;
+  left: 0px;
+
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+
+  height: 100vh;
+  width: $aside-width;
+
+  .aside-user {
+    height: $topbar-height;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .aside-menu {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    background-color: $background;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 24px;
+    font-weight: 600;
+    text-decoration: none;
+    color: unset;
+
+    cursor: pointer;
+
+    &:not(:last-child) {
+      margin-bottom: 1.25rem;
+    }
+
+    &:hover {
+      color: #ababab;
+      transition-duration: 0.2s;
+    }
+
+    &.active {
+      color: $primary;
+    }
+  }
+}
+
+.aside-toggle-mobile {
+  display: none;
+}

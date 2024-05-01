@@ -1,0 +1,21 @@
+.topbar {
+  height: $topbar-height;
+  width: 100%;
+  padding: 0px 1.25rem;
+
+  display: flex;
+  align-items: center;
+
+  background-color: $primary;
+
+  font-family: "Formal";
+
+  .title {
+    font-size: 1.25rem;
+
+    margin-bottom: 0px;
+
+    color: #e1e1e1;
+    text-decoration: none;
+  }
+}

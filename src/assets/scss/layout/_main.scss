@@ -1,0 +1,34 @@
+body {
+  background-color: $primary;
+}
+
+#main {
+  padding-left: $aside-width;
+  min-height: 100vh;
+}
+
+#post {
+  background-color: $background;
+
+  min-height: calc(100vh - $topbar-height);
+  border-radius: 16px 0px 0px 0px;
+  padding: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .aside {
+    display: none;
+  }
+
+  #main {
+    padding-left: 0px;
+  }
+
+  #post {
+    border-radius: 16px 16px 0px 0px;
+  }
+
+  .aside-toggle-mobile {
+    display: block;
+  }
+}
