@@ -13,13 +13,6 @@ const Redirect = () => {
   return <Navigate to={search.get("link") || "/home"} />;
 };
 
-const PrivateRoute = ({ Children }: any) => {
-  if (true) {
-    return Children;
-  }
-  return <Error404 />;
-};
-
 const Private = createBrowserRouter([
   {
     element: <Layout />,
@@ -31,6 +24,14 @@ const Private = createBrowserRouter([
       {
         path: "/signin",
         element: <Redirect />,
+      },
+      {
+        path: "/orders/list",
+        Component: React.lazy(() => import("../pages/Orders/List")),
+      },
+      {
+        path: "/orders/list/:id",
+        Component: React.lazy(() => import("../pages/Orders/Detail")),
       },
       {
         path: "*",

@@ -1,6 +1,7 @@
-import { ChartLine, Package, StackPlus } from "@phosphor-icons/react";
 import { clsx } from "../../utilities/helpers";
 import { Link, useLocation } from "react-router-dom";
+import menus from "../../assets/menus/menus.json";
+import Icon from "../Icon/Icon";
 
 const Aside = () => {
   const location = useLocation().pathname;
@@ -8,27 +9,19 @@ const Aside = () => {
   return (
     <div className="aside">
       <div className="aside-user">
-        <div className="aside-menu">M</div>
+        <div className="aside-menu"></div>
       </div>
       <div className="p-3">
-        <Link
-          to="/orders"
-          className={clsx("aside-menu", location === "/orders" && "active")}
-        >
-          <Package size={26} weight="bold" />
-        </Link>
-        <Link
-          to="/dashboard"
-          className={clsx("aside-menu", location === "/dashboard" && "active")}
-        >
-          <ChartLine size={26} weight="bold" />
-        </Link>
-        <Link
-          to="/stock"
-          className={clsx("aside-menu", location === "/stock" && "active")}
-        >
-          <StackPlus size={26} weight="bold" />
-        </Link>
+        {menus.map((menu) => {
+          return (
+            <Link
+              to={menu.to}
+              className={clsx("aside-menu", location === menu.to && "active")}
+            >
+              <Icon icon={menu.icon} weight="bold" />
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

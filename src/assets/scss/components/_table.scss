@@ -1,0 +1,13 @@
+.table {
+  border-radius: 8px;
+  overflow: hidden;
+
+  thead tr td {
+    color: white;
+    background-color: $secondary;
+  }
+
+  tbody tr:nth-child(2n) td {
+    background-color: #fafafa;
+  }
+}

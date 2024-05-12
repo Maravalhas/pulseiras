@@ -1,7 +1,8 @@
-import { ChartLine, List, Package } from "@phosphor-icons/react";
+import { List } from "@phosphor-icons/react";
 import { Dropdown } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
-import { clsx } from "../../utilities/helpers";
+
+import menus from "../../assets/menus/menus.json";
 
 const Topbar = () => {
   const location = useLocation().pathname;
@@ -10,7 +11,11 @@ const Topbar = () => {
     <div className="topbar">
       <Dropdown className="aside-toggle-mobile me-3">
         <Dropdown.Toggle as={CustomToggle}></Dropdown.Toggle>
-        <Dropdown.Menu></Dropdown.Menu>
+        <Dropdown.Menu>
+          {menus.map((menu) => (
+            <Link to={menu.to}>{menu.title}</Link>
+          ))}
+        </Dropdown.Menu>
       </Dropdown>
       <Link to="/home" className="title">
         Rose Colored Bracelets
