@@ -21,7 +21,10 @@ const Aside = () => {
             <Link
               key={index}
               to={menu.to}
-              className={clsx("aside-menu", location === menu.to && "active")}
+              className={clsx(
+                "aside-menu",
+                location.startsWith(menu.to) && "active"
+              )}
             >
               <Icon icon={menu.icon} weight="bold" />
             </Link>

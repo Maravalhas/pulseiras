@@ -3,9 +3,11 @@ import axios from "axios";
 
 import App from "./App.tsx";
 
-import "./assets/scss/index.scss";
 import { UserProvider } from "./store/User.tsx";
 import { LayoutProvider } from "./components/layout/Context.tsx";
+
+import "./assets/scss/index.scss";
+import "react-toastify/dist/ReactToastify.css";
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 

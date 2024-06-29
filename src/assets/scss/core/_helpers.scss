@@ -6,6 +6,10 @@
   animation: rotation 2s infinite linear;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 @keyframes rotation {
   from {
     transform: rotate(0deg);

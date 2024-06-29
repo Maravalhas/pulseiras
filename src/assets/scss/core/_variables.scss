@@ -11,3 +11,12 @@ $theme-colors: (
   "primary": $primary,
   "secondary": $secondary,
 );
+
+:root {
+  --primary: #{$primary};
+  --secondary: #{$secondary};
+
+  --grey: #{$grey};
+  --medium-grey: #{$medium-grey};
+  --light-grey: #{$light-grey};
+}

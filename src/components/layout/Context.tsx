@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useState } from "react";
+import { ToastContainer } from "react-toastify";
 
 const defaultState = {
   loading: true,
@@ -21,6 +22,7 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
         setAppLoading,
       }}
     >
+      <ToastContainer autoClose={5000} closeOnClick theme="colored" />
       {children}
     </LayoutContext.Provider>
   );
