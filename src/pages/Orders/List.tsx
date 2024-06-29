@@ -13,6 +13,7 @@ const List = () => {
   const [order, setOrder] = useState(["id", "ASC"]);
 
   function getData() {
+    setLoading(true);
     getAllOrders({
       offset: offset[0] * (offset[1] - 1),
       limit: offset[0],
@@ -56,10 +57,6 @@ const List = () => {
         content: (row: any) => row.created_at,
         style: { width: "200px" },
         sort: "created_at",
-      },
-      {
-        title: "Produtos",
-        content: (row: any) => "",
       },
     ],
     []

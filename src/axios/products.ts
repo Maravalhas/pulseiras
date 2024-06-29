@@ -25,6 +25,14 @@ export const createProduct = (body: any) => {
   return axios.post("/products", body);
 };
 
+export const updateProduct = (id: number, body: any) => {
+  return axios.put(`/products/${id}`, body);
+};
+
+export const getProductById = (id: number) => {
+  return axios.get(`/products/${id}`);
+};
+
 export const getAllProcuctsCategories = ({
   offset,
   limit,

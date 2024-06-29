@@ -5,10 +5,34 @@
   thead tr td {
     color: white;
     background-color: $secondary;
+    &:first-child {
+      padding-left: 1rem;
+    }
+    &:last-child {
+      padding-right: 1rem;
+    }
   }
 
-  tbody tr:nth-child(2n) td {
-    background-color: #fafafa;
+  tbody {
+    tr {
+      &:nth-child(2n) td {
+        background-color: #fafafa;
+      }
+      &.selected {
+        td {
+          background-color: $secondary-light;
+        }
+      }
+
+      td {
+        &:first-child {
+          padding-left: 1rem;
+        }
+        &:last-child {
+          padding-right: 1rem;
+        }
+      }
+    }
   }
 }
 

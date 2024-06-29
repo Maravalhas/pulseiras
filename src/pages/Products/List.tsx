@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Pagination from "../../components/Table/Pagination";
 import { getAllProducts } from "../../axios/products";
 import { Form } from "react-bootstrap";
+import moment from "moment";
 
 const List = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const List = () => {
   const [order, setOrder] = useState(["id", "ASC"]);
 
   function getData() {
+    setLoading(true);
     getAllProducts({
       offset: offset[0] * (offset[1] - 1),
       limit: offset[0],
@@ -32,7 +34,7 @@ const List = () => {
     return () => {
       clearTimeout(timeout);
     };
-  }, []);
+  }, [offset, search, order]);
 
   useEffect(() => {
     if (data.data) {
@@ -45,25 +47,30 @@ const List = () => {
       title: "Nome",
       content: (row: any) => row.name,
       sort: "name",
-    },
-    {
-      title: "Preço",
-      content: (row: any) => row.price,
-      sort: "price",
+      style: { width: "250px" },
     },
     {
       title: "Categoria",
       content: (row: any) => row.category,
     },
     {
+      title: "Preço",
+      content: (row: any) => row.price,
+      sort: "price",
+      style: { width: "100px", textAlign: "center" },
+    },
+    {
       title: "Stock",
       content: (row: any) => row.stock,
       sort: "stock",
+      style: { width: "100px", textAlign: "center" },
     },
     {
       title: "Data Adição",
-      content: (row: any) => row.created_at,
+      content: (row: any) =>
+        moment(row.created_at).format("DD/MM/YYYY [às] HH:mm"),
       sort: "created_at",
+      style: { width: "200px" },
     },
   ];
 
@@ -101,6 +108,10 @@ const List = () => {
           loading={loading}
           sort={order}
           setSort={setOrder}
+          selectableRows
+          onRowSelected={(row) => {
+            navigate(`/products/list/${row.id}`);
+          }}
         />
         <div className="d-flex justify-content-center">
           <Pagination

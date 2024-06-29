@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../components/Button/Button";
-import { createProduct, getAllProcuctsCategories } from "../../axios/products";
+import {
+  createProduct,
+  getAllProcuctsCategories,
+  getProductById,
+  updateProduct,
+} from "../../axios/products";
 import { toast } from "react-toastify";
 
 type Product = {
@@ -24,7 +29,7 @@ const Detail = () => {
 
   const [product, setProduct] = useState<Product | null>(null);
 
-  function updateProduct(value: any, param: string) {
+  function updateProductState(value: any, param: string) {
     setProduct({
       ...product,
       [param]: value,
@@ -33,6 +38,9 @@ const Detail = () => {
 
   useEffect(() => {
     if (productId) {
+      getProductById(productId).then((res) => {
+        setProduct(res.data);
+      });
     } else {
       setProduct({} as Product);
     }
@@ -71,6 +79,28 @@ const Detail = () => {
       });
   }
 
+  function submitUpdateProduct() {
+    const body = {
+      name: product?.name,
+      description: product?.description,
+      id_category: product?.id_category,
+      stock: product?.stock,
+      price: product?.price,
+    };
+
+    updateProduct(productId, body)
+      .then(() => {
+        toast.success("Produto atualizado com sucesso");
+        navigate("/products/list");
+      })
+      .catch((err) => {
+        toast.error(
+          err.response?.data?.message || "Erro ao atualizar o produto"
+        );
+        setSubmiting(false);
+      });
+  }
+
   return (
     <div className="card">
       <div className="card-header">
@@ -103,7 +133,7 @@ const Detail = () => {
           e.preventDefault();
           setSubmiting(true);
           if (productId) {
-            // submitUpdateProduct();
+            submitUpdateProduct();
           } else {
             submitCreateProduct();
           }
@@ -119,10 +149,11 @@ const Detail = () => {
               <Form.Control
                 value={product?.name || ""}
                 onChange={(e) => {
-                  updateProduct(e.target.value, "name");
+                  updateProductState(e.target.value, "name");
                 }}
                 placeholder="Nome do produto"
                 required
+                disabled={!product}
               />
             </Form.Group>
             <Form.Group controlId="inputName" className="mb-3">
@@ -130,10 +161,11 @@ const Detail = () => {
               <Form.Control
                 value={product?.description || ""}
                 onChange={(e) => {
-                  updateProduct(e.target.value, "description");
+                  updateProductState(e.target.value, "description");
                 }}
                 placeholder="Breve descrição sobre o produto"
                 as="textarea"
+                disabled={!product}
               />
             </Form.Group>
             <Form.Group controlId="inputName">
@@ -142,8 +174,9 @@ const Detail = () => {
                 required
                 value={product?.id_category || ""}
                 onChange={(e) => {
-                  updateProduct(+e.target.value, "id_category");
+                  updateProductState(+e.target.value, "id_category");
                 }}
+                disabled={!product}
               >
                 <option value="" disabled>
                   Selecione uma categoria
@@ -169,8 +202,9 @@ const Detail = () => {
                 placeholder="Quantidade em stock"
                 value={product?.stock || 0}
                 onChange={(e) => {
-                  updateProduct(+e.target.value, "stock");
+                  updateProductState(+e.target.value, "stock");
                 }}
+                disabled={!product}
               />
             </Form.Group>
             <Form.Group controlId="inputName">
@@ -180,8 +214,9 @@ const Detail = () => {
                 placeholder="Preço do produto"
                 value={product?.price || 0}
                 onChange={(e) => {
-                  updateProduct(+e.target.value, "price");
+                  updateProductState(+e.target.value, "price");
                 }}
+                disabled={!product}
               />
             </Form.Group>
           </div>

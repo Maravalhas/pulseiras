@@ -13,9 +13,21 @@ type Props = {
   loading?: boolean;
   sort?: string[];
   setSort?: (value: string[]) => void;
+  selectableRows?: boolean;
+  onRowSelected?: (row: any) => void;
+  selectedRow?: number;
 };
 
-const Table: React.FC<Props> = ({ data, columns, loading, sort, setSort }) => {
+const Table: React.FC<Props> = ({
+  data,
+  columns,
+  loading,
+  sort,
+  setSort,
+  selectableRows,
+  onRowSelected,
+  selectedRow,
+}) => {
   const useSort = useMemo(() => {
     return sort && setSort;
   }, [sort, setSort]);
@@ -58,9 +70,20 @@ const Table: React.FC<Props> = ({ data, columns, loading, sort, setSort }) => {
         <tbody>
           {data?.length ? (
             data?.map((row: any, index: number) => (
-              <tr key={index}>
+              <tr
+                key={index}
+                className={clsx(
+                  selectableRows && "pointer",
+                  selectableRows && selectedRow === row.id ? "selected" : ""
+                )}
+                onClick={() => {
+                  if (selectableRows && onRowSelected) onRowSelected(row);
+                }}
+              >
                 {columns.map((column, index) => (
-                  <td key={index}>{column.content(row)}</td>
+                  <td style={column.style} key={index}>
+                    {column.content(row)}
+                  </td>
                 ))}
               </tr>
             ))
