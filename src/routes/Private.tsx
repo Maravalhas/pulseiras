@@ -22,16 +22,24 @@ const Private = createBrowserRouter([
         Component: React.lazy(() => import("../pages/Home/Home")),
       },
       {
-        path: "/signin",
-        element: <Redirect />,
-      },
-      {
         path: "/orders/list",
         Component: React.lazy(() => import("../pages/Orders/List")),
       },
       {
         path: "/orders/list/:id",
         Component: React.lazy(() => import("../pages/Orders/Detail")),
+      },
+      {
+        path: "/products/list",
+        Component: React.lazy(() => import("../pages/Products/List")),
+      },
+      {
+        path: "/products/list/:id",
+        Component: React.lazy(() => import("../pages/Products/Detail")),
+      },
+      {
+        path: "/signin",
+        element: <Redirect />,
       },
       {
         path: "*",

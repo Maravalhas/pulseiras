@@ -3,5 +3,10 @@
     "title": "Orders",
     "to": "/orders/list",
     "icon": "Package"
+  },
+  {
+    "title": "Products",
+    "to": "/products/list",
+    "icon": "ShoppingBag"
   }
 ]

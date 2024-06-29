@@ -1,3 +1,4 @@
+import React from "react";
 import { Navigate, createBrowserRouter, useLocation } from "react-router-dom";
 
 const Redirect = () => {
@@ -11,6 +12,10 @@ const Redirect = () => {
 };
 
 const Public = createBrowserRouter([
+  {
+    path: "/signin",
+    Component: React.lazy(() => import("../pages/Auth/Signin")),
+  },
   {
     path: "*",
     element: <Redirect />,

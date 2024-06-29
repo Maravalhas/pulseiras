@@ -1,12 +1,26 @@
-import { createContext, ReactNode } from "react";
+import { createContext, ReactNode, useState } from "react";
 
-const defaultState = {};
+const defaultState = {
+  loading: true,
+  setAppLoading: (_: boolean) => {},
+};
 
 const LayoutContext = createContext(defaultState);
 
-export const LayoutProvider = (children: ReactNode) => {
+export const LayoutProvider = ({ children }: { children: ReactNode }) => {
+  const [loading, setLoading] = useState(defaultState.loading);
+
+  function setAppLoading(value: boolean) {
+    setLoading(value);
+  }
+
   return (
-    <LayoutContext.Provider value={defaultState}>
+    <LayoutContext.Provider
+      value={{
+        loading,
+        setAppLoading,
+      }}
+    >
       {children}
     </LayoutContext.Provider>
   );

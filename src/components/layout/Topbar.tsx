@@ -1,19 +1,20 @@
 import { List } from "@phosphor-icons/react";
 import { Dropdown } from "react-bootstrap";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import menus from "../../assets/menus/menus.json";
+import React from "react";
 
 const Topbar = () => {
-  const location = useLocation().pathname;
-
   return (
     <div className="topbar">
       <Dropdown className="aside-toggle-mobile me-3">
         <Dropdown.Toggle as={CustomToggle}></Dropdown.Toggle>
         <Dropdown.Menu>
-          {menus.map((menu) => (
-            <Link to={menu.to}>{menu.title}</Link>
+          {menus.map((menu, index) => (
+            <Link key={index} to={menu.to}>
+              {menu.title}
+            </Link>
           ))}
         </Dropdown.Menu>
       </Dropdown>
@@ -26,10 +27,10 @@ const Topbar = () => {
 
 export default Topbar;
 
-const CustomToggle = (props: any) => {
+const CustomToggle = React.forwardRef<any, any>((props, ref) => {
   return (
-    <div {...props} className="btn btn-secondary py-1 px-2">
+    <div {...props} ref={ref} className="btn btn-secondary py-1 px-2">
       <List size={22} color="white" />
     </div>
   );
-};
+});

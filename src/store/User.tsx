@@ -1,48 +1,61 @@
 import { createContext, ReactNode, useState } from "react";
+import axios from "axios";
 
 type User = {
-  id: null | number;
   access_token: string;
+  id: null | number;
+  name: string | null;
   actions: {
-    login: (id: number, access_token: string) => void;
+    login: ({ access_token }: { access_token: string }) => void;
     logout: () => void;
+    saveInfo: (info: { id: number; name: string }) => void;
   };
 };
 
 const defaultState = {
-  id: 1,
+  id: null,
   access_token: "",
+  name: "",
   actions: {
-    login: (id: number, access_token: string) => {},
+    login: (_: { access_token: string }) => {},
     logout: () => {},
+    saveInfo: (_: { id: number; name: string }) => {},
   },
 };
 
 const UserContext = createContext<User>(defaultState);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<{ id: number | null; access_token: string }>(
-    defaultState
-  );
+  const [accessToken, setAccessToken] = useState<string>("");
 
-  function login(id: number, access_token: string) {
-    setUser({
-      id,
-      access_token,
-    });
+  const [user, setUser] = useState<{
+    id: number | null;
+    name: string | null;
+  }>(defaultState);
+
+  function login({ access_token }: { access_token: string }) {
+    setAccessToken(access_token);
   }
 
   function logout() {
-    setUser({ id: null, access_token: "" });
+    axios.defaults.headers.common["Authorization"] = "";
+    setAccessToken("");
+    setUser({ id: null, name: "" });
+  }
+
+  function saveInfo(info: { id: number; name: string }) {
+    setUser(info);
   }
 
   return (
     <UserContext.Provider
       value={{
         ...user,
+        access_token: accessToken,
         actions: {
           login,
           logout,
+          saveInfo,
         },
       }}
     >
