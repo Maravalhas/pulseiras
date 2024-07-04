@@ -68,7 +68,7 @@ const List = () => {
     {
       title: "Data Adição",
       content: (row: any) =>
-        moment(row.created_at).format("DD/MM/YYYY [às] HH:mm"),
+        moment(row.created_at).format("DD/MM/YYYY [às] HH:mm[h]"),
       sort: "created_at",
       style: { width: "200px" },
     },

@@ -39,6 +39,7 @@ function App() {
         .catch(() => {
           localStorage.removeItem("token");
           user.actions.logout();
+          layout.setAppLoading(false);
         });
     }
   }, [user.access_token]);

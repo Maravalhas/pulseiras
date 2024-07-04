@@ -3,8 +3,12 @@ import Table from "../../components/Table/Table";
 import { getAllOrders } from "../../axios/orders";
 import Pagination from "../../components/Table/Pagination";
 import { Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
 const List = () => {
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
 
   const [data, setData] = useState<any>({});
@@ -49,12 +53,22 @@ const List = () => {
       {
         title: "Nome",
         content: (row: any) => row.name,
-        style: { width: "250px" },
+        sort: "name",
+      },
+      {
+        title: "Endereço",
+        content: (row: any) => (
+          <>
+            <p className="mb-0">{row.address}</p>
+            <p className="mb-0">{row.zipcode + ", " + row.locality}</p>
+          </>
+        ),
         sort: "name",
       },
       {
         title: "Data",
-        content: (row: any) => row.created_at,
+        content: (row: any) =>
+          moment(row.created_at).format("DD/MM/YYYY [às] HH:mm[h]"),
         style: { width: "200px" },
         sort: "created_at",
       },
@@ -67,7 +81,14 @@ const List = () => {
       <div className="card-header">
         <div className="card-title">Encomendas</div>
         <div className="card-toolbar">
-          <button className="btn btn-primary">Nova Encomenda</button>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              navigate("/orders/list/new");
+            }}
+          >
+            Nova Encomenda
+          </button>
         </div>
       </div>
       <div className="card-body px-0">
@@ -89,6 +110,10 @@ const List = () => {
           loading={loading}
           sort={order}
           setSort={setOrder}
+          selectableRows
+          onRowSelected={(row) => {
+            navigate(`/orders/list/${row.id}`);
+          }}
         />
         <div className="d-flex justify-content-center">
           <Pagination

@@ -20,3 +20,11 @@ export const getAllOrders = ({
     },
   });
 };
+
+export const getOrderById = (id: number) => {
+  return axios.get(`/orders/${id}`);
+};
+
+export const createOrder = (body: any) => {
+  return axios.post("/orders", body);
+};

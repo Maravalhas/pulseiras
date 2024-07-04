@@ -6,7 +6,7 @@ type Props = {
   data: any;
   columns: {
     title?: string;
-    content: (row: any) => ReactNode | string;
+    content: (row: any, index: number) => ReactNode | string;
     style?: any;
     sort?: string;
   }[];
@@ -80,9 +80,9 @@ const Table: React.FC<Props> = ({
                   if (selectableRows && onRowSelected) onRowSelected(row);
                 }}
               >
-                {columns.map((column, index) => (
-                  <td style={column.style} key={index}>
-                    {column.content(row)}
+                {columns.map((column, index2) => (
+                  <td style={column.style} key={index2}>
+                    {column.content(row, index)}
                   </td>
                 ))}
               </tr>
