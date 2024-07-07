@@ -8,10 +8,22 @@ $light-grey: #f2f2f2;
 
 $background: #f2f2f2;
 
+$success: #00c851;
+$success-light: #68d293;
+$danger: #171414;
+$danger-light: #ff7c7c;
+$warning: #ffbb33;
+$warning-light: #ffd98d;
+$info: #33b5e5;
+$info-light: #82deff;
+
 $theme-colors: (
   "primary": $primary,
   "secondary": $secondary,
-  "danger": red,
+  "success": $success,
+  "danger": $danger,
+  "warning": $warning,
+  "info": $info,
 );
 
 :root {
@@ -21,4 +33,13 @@ $theme-colors: (
   --grey: #{$grey};
   --medium-grey: #{$medium-grey};
   --light-grey: #{$light-grey};
+
+  --success: #{$success};
+  --danger: #{$danger};
+  --warning: #{$warning};
+  --info: #{$info};
+  --success-light: #{$success-light};
+  --danger-light: #{$danger-light};
+  --warning-light: #{$warning-light};
+  --info-light: #{$info-light};
 }

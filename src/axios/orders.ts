@@ -38,3 +38,7 @@ export const createOrder = (body: any) => {
 export const updateOrder = (id: number, body: any) => {
   return axios.put(`/orders/${id}`, body);
 };
+
+export const patchOrderState = (id: number) => {
+  return axios.patch(`/orders/${id}`);
+};

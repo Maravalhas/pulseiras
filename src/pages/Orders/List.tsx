@@ -1,11 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import Table from "../../components/Table/Table";
-import { getAllOrders } from "../../axios/orders";
+import { getAllOrders, patchOrderState } from "../../axios/orders";
 import Pagination from "../../components/Table/Pagination";
-import { Form } from "react-bootstrap";
+import {
+  Form,
+  OverlayTrigger,
+  Popover,
+  PopoverBody,
+  PopoverHeader,
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import Button from "../../components/Button/Button";
+import LabelState from "../../components/State/State";
+import { toast } from "react-toastify";
 
 const List = () => {
   const navigate = useNavigate();
@@ -67,26 +75,118 @@ const List = () => {
         sort: "name",
       },
       {
-        title: "Estado",
-        content: (row: any) => row.state,
-      },
-      {
-        title: "Data",
+        title: "Data da encomenda",
         content: (row: any) =>
           moment(row.created_at).format("DD/MM/YYYY [às] HH:mm[h]"),
         style: { width: "200px" },
         sort: "created_at",
       },
       {
+        title: "Data da expedição",
+        content: (row: any) =>
+          row.date_shipped
+            ? moment(row.date_shipped).format("DD/MM/YYYY [às] HH:mm[h]")
+            : "-",
+        style: { width: "200px" },
+        sort: "date_shipped",
+      },
+      {
+        title: "Estado",
         content: (row: any) => {
+          let color: any = "";
+
           switch (row.state_key) {
             case "P":
-              return <Button icon="Coins" />;
+              color = "warning";
+              break;
             case "C":
-              return <Button icon="Truck" />;
+              color = "info";
+              break;
+            case "A":
+              color = "success-light";
+              break;
             case "E":
-              return <Button icon="Package" />;
+              color = "warning-light";
+              break;
+            case "R":
+              color = "success";
+              break;
           }
+
+          return <LabelState variant={color} content={row.state} />;
+        },
+        style: { width: "150px", textAlign: "center" },
+      },
+      {
+        content: (row: any) => {
+          let config: any;
+
+          switch (row.state_key) {
+            case "P":
+              config = {
+                icon: "Coins",
+                header: "Confirmar pagamento?",
+              };
+              break;
+            case "C":
+              config = {
+                icon: "Stamp",
+                header: "Encomenda pronta para expedição?",
+              };
+              break;
+            case "A":
+              config = {
+                icon: "Truck",
+                header: "Deseja confirmar a expedição desta encomenda?",
+              };
+              break;
+            case "E":
+              config = {
+                icon: "Check",
+                header: "Deseja confirmar a entrega desta encomenda?",
+              };
+              break;
+          }
+
+          if (config)
+            return (
+              <OverlayTrigger
+                rootClose
+                trigger={"click"}
+                overlay={
+                  <Popover>
+                    <PopoverHeader>{config.header}</PopoverHeader>
+                    <PopoverBody>
+                      <Button
+                        modifiers="me-2"
+                        onClick={() => {
+                          patchOrderState(row.id)
+                            .then(() => {
+                              document.body.click();
+                              getData();
+                            })
+                            .catch((err) => {
+                              toast.error(err.response.data.message);
+                            });
+                        }}
+                      >
+                        Confirmar
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        onClick={() => {
+                          document.body.click();
+                        }}
+                      >
+                        Cancelar
+                      </Button>
+                    </PopoverBody>
+                  </Popover>
+                }
+              >
+                <Button icon={config.icon} />
+              </OverlayTrigger>
+            );
         },
         style: { width: "50px" },
         button: true,
