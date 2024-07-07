@@ -6,7 +6,7 @@ import Table from "../../components/Table/Table";
 import { getAllProducts } from "../../axios/products";
 import { formatCurrency } from "../../utilities/helpers";
 import { getAllShippingMethods } from "../../axios/shipping_methods";
-import { createOrder, getOrderById } from "../../axios/orders";
+import { createOrder, getOrderById, updateOrder } from "../../axios/orders";
 import { toast } from "react-toastify";
 
 type Order = {
@@ -39,6 +39,8 @@ type OrderProduct = {
   id_product: number;
   price: number;
   quantity: number;
+  discount?: number;
+  discount_type?: number;
 };
 
 const Detail = () => {
@@ -73,6 +75,8 @@ const Detail = () => {
               id_product: product.id_product,
               price: product.price,
               quantity: product.quantity,
+              discount: product.discount,
+              discount_type: product.discount_type,
             }))
           );
         })
@@ -148,21 +152,47 @@ const Detail = () => {
       products: orderProducts.map((product) => ({
         quantity: product.quantity,
         id_product: product.id_product,
+        discount: product.discount,
+        discount_type: product.discount_type,
       })),
     };
 
     createOrder(body)
-      .then((res) => {
+      .then(() => {
         toast.success("Encomenda criada com sucesso");
         navigate("/orders/list");
       })
-      .catch((err) => {
+      .catch(() => {
         toast.error("Erro ao criar encomenda");
         setSubmiting(false);
       });
   }
 
-  function submitUpdateOrder() {}
+  function submitUpdateOrder() {
+    const body = {
+      name: order?.name,
+      address: order?.address,
+      zipcode: order?.zipcode,
+      locality: order?.locality,
+      id_shipping_method: order?.id_shipping_method,
+      products: orderProducts.map((product) => ({
+        quantity: product.quantity,
+        id_product: product.id_product,
+        discount: product.discount,
+        discount_type: product.discount_type,
+      })),
+    };
+
+    updateOrder(orderId, body)
+      .then(() => {
+        toast.success("Encomenda atualizada com sucesso");
+        navigate("/orders/list");
+      })
+      .catch(() => {
+        toast.error("Erro ao atualizar encomenda");
+        setSubmiting(false);
+      });
+  }
 
   const columns = [
     {
@@ -215,11 +245,56 @@ const Detail = () => {
       style: { textAlign: "center", width: "100px" },
     },
     {
+      title: "Desconto",
+      content: (row: any, index: number) => (
+        <Form.Control
+          value={row.discount || ""}
+          onChange={(e) => {
+            updateOrderProducts(e.target.value, "discount", index);
+          }}
+        />
+      ),
+      style: { textAlign: "center", width: "100px" },
+    },
+    {
+      title: "U. Desconto",
+      content: (row: any, index: number) => (
+        <Form.Select
+          value={row.discount ? row.discount_type || "" : ""}
+          onChange={(e) => {
+            updateOrderProducts(+e.target.value, "discount_type", index);
+          }}
+          disabled={!row.discount}
+        >
+          <option value="" disabled />
+          <option value={1}>%</option>
+          <option value={2}>€</option>
+          <option value={3}>€/u</option>
+        </Form.Select>
+      ),
+      style: { textAlign: "center", width: "120px" },
+    },
+    {
       title: "Total",
-      content: (row: any) =>
-        row.price && row.quantity
-          ? formatCurrency(row.price * row.quantity)
-          : "-",
+      content: (row: any) => {
+        let finalPrice =
+          row.price && row.quantity ? row.price * row.quantity : 0;
+        if (row.discount) {
+          switch (row.discount_type) {
+            case 1:
+              finalPrice = finalPrice - finalPrice * (+row.discount / 100);
+              break;
+            case 2:
+              finalPrice = finalPrice - +row.discount;
+              break;
+            case 3:
+              finalPrice = finalPrice - +row.discount * row.quantity;
+              break;
+          }
+        }
+
+        return formatCurrency(finalPrice >= 0 ? finalPrice : 0);
+      },
       style: { textAlign: "center", width: "100px" },
     },
     {

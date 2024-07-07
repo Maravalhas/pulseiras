@@ -18,7 +18,7 @@ const Topbar = () => {
           ))}
         </Dropdown.Menu>
       </Dropdown>
-      <Link to="/home" className="title">
+      <Link to="/" className="title">
         Rose Colored Bracelets
       </Link>
     </div>
