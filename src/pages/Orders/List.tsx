@@ -5,6 +5,7 @@ import Pagination from "../../components/Table/Pagination";
 import { Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import Button from "../../components/Button/Button";
 
 const List = () => {
   const navigate = useNavigate();
@@ -66,11 +67,29 @@ const List = () => {
         sort: "name",
       },
       {
+        title: "Estado",
+        content: (row: any) => row.state,
+      },
+      {
         title: "Data",
         content: (row: any) =>
           moment(row.created_at).format("DD/MM/YYYY [às] HH:mm[h]"),
         style: { width: "200px" },
         sort: "created_at",
+      },
+      {
+        content: (row: any) => {
+          switch (row.state_key) {
+            case "P":
+              return <Button icon="Coins" />;
+            case "C":
+              return <Button icon="Truck" />;
+            case "E":
+              return <Button icon="Package" />;
+          }
+        },
+        style: { width: "50px" },
+        button: true,
       },
     ],
     []

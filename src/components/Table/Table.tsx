@@ -9,6 +9,7 @@ type Props = {
     content: (row: any, index: number) => ReactNode | string;
     style?: any;
     sort?: string;
+    button?: boolean;
   }[];
   loading?: boolean;
   sort?: string[];
@@ -81,7 +82,15 @@ const Table: React.FC<Props> = ({
                 }}
               >
                 {columns.map((column, index2) => (
-                  <td style={column.style} key={index2}>
+                  <td
+                    style={column.style}
+                    key={index2}
+                    onClick={(e) => {
+                      if (column.button) {
+                        e.stopPropagation();
+                      }
+                    }}
+                  >
                     {column.content(row, index)}
                   </td>
                 ))}
