@@ -16,6 +16,9 @@ type Order = {
   zipcode: string;
   locality: string;
   id_shipping_method: number;
+  shipping_price?: number;
+  state_key?: number;
+  state_order?: number;
 };
 
 type Product = {
@@ -53,9 +56,21 @@ const Detail = () => {
   const [order, setOrder] = useState<Order | null>(null);
   const [orderProducts, setOrderProducts] = useState<OrderProduct[]>([]);
 
+  const editable = useMemo(() => {
+    if (order) {
+      if (orderId) {
+        if (order?.state_order && order?.state_order >= 4) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
+  }, [order]);
+
   const total = useMemo(() => {
     return orderProducts.reduce((acc, product) => {
-      return acc + (product.price || 0) * (product.quantity || 0);
+      return acc + getProductFinalPrice(product);
     }, 0);
   }, [orderProducts]);
 
@@ -69,6 +84,9 @@ const Detail = () => {
             zipcode: res.data.zipcode,
             locality: res.data.locality,
             id_shipping_method: res.data.id_shipping_method,
+            state_key: res.data.state_key,
+            state_order: res.data.state_order,
+            shipping_price: res.data.shipping_price,
           } as Order);
           setOrderProducts(
             res.data.OrdersProducts.map((product: any) => ({
@@ -90,10 +108,13 @@ const Detail = () => {
   }, [orderId]);
 
   function updateOrderState(value: any, param: string) {
-    setOrder({
-      ...order,
-      [param]: value,
-    } as Order);
+    setOrder(
+      (order) =>
+        ({
+          ...order,
+          [param]: value,
+        } as Order)
+    );
   }
 
   function updateOrderProducts(value: any, param: string, index: number) {
@@ -107,19 +128,42 @@ const Detail = () => {
     });
   }
 
+  function getProductFinalPrice(product: OrderProduct) {
+    let finalPrice =
+      product.price && product.quantity ? product.price * product.quantity : 0;
+
+    if (product.discount) {
+      switch (product.discount_type) {
+        case 1:
+          finalPrice = finalPrice - finalPrice * (+product.discount / 100);
+          break;
+        case 2:
+          finalPrice = finalPrice - +product.discount;
+          break;
+        case 3:
+          finalPrice = finalPrice - +product.discount * product.quantity;
+          break;
+      }
+    }
+    return finalPrice >= 0 ? finalPrice : 0;
+  }
+
   const [products, setProducts] = useState<Product[]>([]);
   const [shippingMethods, setShippingMethods] = useState<ShippingMethods[]>([]);
 
-  const selectedMethod = useMemo(() => {
-    return shippingMethods?.find(
+  const shippingPrice = useMemo(() => {
+    if (order?.shipping_price) {
+      return order?.shipping_price;
+    }
+    const method = shippingMethods?.find(
       (method: any) => method.value === order?.id_shipping_method
     );
-  }, [shippingMethods, order?.id_shipping_method]);
+    return method?.price || 0;
+  }, [shippingMethods, order?.shipping_price, order?.id_shipping_method]);
 
   const totalWithShipping = useMemo(() => {
-    if (!selectedMethod) return total;
-    return total + (selectedMethod?.price || 0);
-  }, [total, selectedMethod]);
+    return total + shippingPrice;
+  }, [total, shippingPrice]);
 
   useEffect(() => {
     getAllProducts({}).then((res) => {
@@ -214,6 +258,7 @@ const Detail = () => {
               return copy;
             });
           }}
+          disabled={!editable}
         >
           <option value={""} disabled>
             Selecione um produto
@@ -235,6 +280,7 @@ const Detail = () => {
           onChange={(e) => {
             updateOrderProducts(+e.target.value, "quantity", index);
           }}
+          disabled={!editable}
         />
       ),
       style: { width: "100px", textAlign: "center" },
@@ -252,6 +298,7 @@ const Detail = () => {
           onChange={(e) => {
             updateOrderProducts(e.target.value, "discount", index);
           }}
+          disabled={!editable}
         />
       ),
       style: { textAlign: "center", width: "100px" },
@@ -264,7 +311,7 @@ const Detail = () => {
           onChange={(e) => {
             updateOrderProducts(+e.target.value, "discount_type", index);
           }}
-          disabled={!row.discount}
+          disabled={!editable || !row.discount}
         >
           <option value="" disabled />
           <option value={1}>%</option>
@@ -277,21 +324,7 @@ const Detail = () => {
     {
       title: "Total",
       content: (row: any) => {
-        let finalPrice =
-          row.price && row.quantity ? row.price * row.quantity : 0;
-        if (row.discount) {
-          switch (row.discount_type) {
-            case 1:
-              finalPrice = finalPrice - finalPrice * (+row.discount / 100);
-              break;
-            case 2:
-              finalPrice = finalPrice - +row.discount;
-              break;
-            case 3:
-              finalPrice = finalPrice - +row.discount * row.quantity;
-              break;
-          }
-        }
+        const finalPrice = getProductFinalPrice(row);
 
         return formatCurrency(finalPrice >= 0 ? finalPrice : 0);
       },
@@ -309,6 +342,7 @@ const Detail = () => {
               return copy;
             });
           }}
+          disabled={!editable}
         />
       ),
       style: { width: "50px" },
@@ -363,7 +397,7 @@ const Detail = () => {
                   }}
                   placeholder="Nome do comprador"
                   required
-                  disabled={!order}
+                  disabled={!editable}
                 />
               </Form.Group>
               <Form.Group controlId="inputAddress" className="mb-3">
@@ -375,7 +409,7 @@ const Detail = () => {
                   }}
                   placeholder="Endereço de entrega"
                   as="textarea"
-                  disabled={!order}
+                  disabled={!editable}
                 />
               </Form.Group>
               <div className="d-flex">
@@ -390,7 +424,7 @@ const Detail = () => {
                       updateOrderState(e.target.value, "zipcode");
                     }}
                     placeholder="Código postal"
-                    disabled={!order}
+                    disabled={!editable}
                   />
                 </Form.Group>
                 <Form.Group controlId="inputLocality" className="mb-3 col-7">
@@ -401,7 +435,7 @@ const Detail = () => {
                       updateOrderState(e.target.value, "locality");
                     }}
                     placeholder="Localidade"
-                    disabled={!order}
+                    disabled={!editable}
                   />
                 </Form.Group>
               </div>
@@ -412,8 +446,9 @@ const Detail = () => {
                   value={order?.id_shipping_method || ""}
                   onChange={(e) => {
                     updateOrderState(+e.target.value, "id_shipping_method");
+                    updateOrderState(null, "shipping_price");
                   }}
-                  disabled={!order}
+                  disabled={!editable}
                 >
                   <option value="" disabled>
                     Selecione um método de envio
@@ -433,17 +468,19 @@ const Detail = () => {
             </div>
             <div className="info-card-body">
               <Table data={orderProducts} columns={columns} />
-              <p
-                className="text-primary pointer fw-bold"
-                onClick={() => {
-                  setOrderProducts((products) => [
-                    ...products,
-                    {} as OrderProduct,
-                  ]);
-                }}
-              >
-                Adicionar produto
-              </p>
+              {editable ? (
+                <p
+                  className="text-primary pointer fw-bold"
+                  onClick={() => {
+                    setOrderProducts((products) => [
+                      ...products,
+                      {} as OrderProduct,
+                    ]);
+                  }}
+                >
+                  Adicionar produto
+                </p>
+              ) : null}
             </div>
           </div>
           <div className="info-card">
@@ -466,9 +503,7 @@ const Detail = () => {
                       Portes:
                     </td>
                     <td>
-                      {selectedMethod?.price
-                        ? formatCurrency(selectedMethod?.price!)
-                        : "-"}
+                      {shippingPrice ? formatCurrency(shippingPrice!) : "-"}
                     </td>
                   </tr>
                   <tr>
