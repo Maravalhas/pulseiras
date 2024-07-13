@@ -14,6 +14,7 @@ import moment from "moment";
 import Button from "../../components/Button/Button";
 import LabelState from "../../components/State/State";
 import { toast } from "react-toastify";
+import { getAllOrdersStates } from "../../axios/orders_states";
 
 const List = () => {
   const navigate = useNavigate();
@@ -23,7 +24,10 @@ const List = () => {
   const [data, setData] = useState<any>({});
   const [offset, setOffset] = useState([10, 1]);
   const [search, setSearch] = useState("");
-  const [order, setOrder] = useState(["id", "ASC"]);
+  const [order, setOrder] = useState(["created_at", "DESC"]);
+
+  const [selectedState, setSelectedState] = useState(0);
+  const [states, setStates] = useState<any>([]);
 
   function getData() {
     setLoading(true);
@@ -32,10 +36,17 @@ const List = () => {
       limit: offset[0],
       search,
       order,
+      state: selectedState || undefined,
     }).then((res) => {
       setData(res.data);
     });
   }
+
+  useEffect(() => {
+    getAllOrdersStates().then((res) => {
+      setStates(res.data);
+    });
+  }, []);
 
   useEffect(() => {
     let timeout = setTimeout(getData, search ? 300 : 0);
@@ -43,7 +54,7 @@ const List = () => {
     return () => {
       clearTimeout(timeout);
     };
-  }, [offset, search, order]);
+  }, [offset, search, order, selectedState]);
 
   useEffect(() => {
     if (data.data) {
@@ -63,6 +74,7 @@ const List = () => {
         title: "Nome",
         content: (row: any) => row.name,
         sort: "name",
+        style: { width: "150px" },
       },
       {
         title: "Endereço",
@@ -72,13 +84,14 @@ const List = () => {
             <p className="mb-0">{row.zipcode + ", " + row.locality}</p>
           </>
         ),
-        sort: "name",
+        sort: "address",
+        style: { width: "250px" },
       },
       {
         title: "Data da encomenda",
         content: (row: any) =>
           moment(row.created_at).format("DD/MM/YYYY [às] HH:mm[h]"),
-        style: { width: "200px" },
+        style: { width: "210px" },
         sort: "created_at",
       },
       {
@@ -87,7 +100,7 @@ const List = () => {
           row.date_shipped
             ? moment(row.date_shipped).format("DD/MM/YYYY [às] HH:mm[h]")
             : "-",
-        style: { width: "200px" },
+        style: { width: "210px" },
         sort: "date_shipped",
       },
       {
@@ -115,7 +128,8 @@ const List = () => {
 
           return <LabelState variant={color} content={row.state} />;
         },
-        style: { width: "150px", textAlign: "center" },
+        style: { width: "120px", textAlign: "center" },
+        sort: "id_state",
       },
       {
         content: (row: any) => {
@@ -211,17 +225,31 @@ const List = () => {
         </div>
       </div>
       <div className="card-body px-0">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <div>
+        <div className="d-flex justify-content-between align-items-center flex-wrap mb-3">
+          <div className="d-flex my-2">
             <Form.Control
-              placeholder="Pesquisar encomendas"
+              placeholder="Pesquisar"
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
               }}
+              className="flex-grow me-3"
             />
+            <Form.Select
+              value={selectedState}
+              onChange={(e) => {
+                setSelectedState(parseInt(e.target.value));
+              }}
+            >
+              <option value={0}>Todos os estados</option>
+              {states.map((state: any) => (
+                <option key={state.id} value={state.id}>
+                  {state.name}
+                </option>
+              ))}
+            </Form.Select>
           </div>
-          <p className="mb-0 text-muted">{data.total} encomendas</p>
+          <p className="my-2 text-muted">{data.total} encomendas</p>
         </div>
         <Table
           data={data.data}
@@ -233,6 +261,7 @@ const List = () => {
           onRowSelected={(row) => {
             navigate(`/orders/list/${row.id}`);
           }}
+          modifiers="mb-3"
         />
         <div className="d-flex justify-content-center">
           <Pagination

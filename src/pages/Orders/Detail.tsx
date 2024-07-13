@@ -270,9 +270,10 @@ const Detail = () => {
           ))}
         </Form.Select>
       ),
+      style: { width: "200px", textAlign: "center" },
     },
     {
-      title: "Quantidade",
+      title: "Quant.",
       content: (row: any, index: number) => (
         <Form.Control
           type="number"
@@ -304,7 +305,7 @@ const Detail = () => {
       style: { textAlign: "center", width: "100px" },
     },
     {
-      title: "U. Desconto",
+      title: "Un.",
       content: (row: any, index: number) => (
         <Form.Select
           value={row.discount ? row.discount_type || "" : ""}
@@ -319,7 +320,7 @@ const Detail = () => {
           <option value={3}>€/u</option>
         </Form.Select>
       ),
-      style: { textAlign: "center", width: "120px" },
+      style: { textAlign: "center", width: "90px" },
     },
     {
       title: "Total",
@@ -345,7 +346,7 @@ const Detail = () => {
           disabled={!editable}
         />
       ),
-      style: { width: "50px" },
+      style: { width: "60px" },
     },
   ];
 
@@ -531,7 +532,7 @@ const Detail = () => {
                 <button
                   className="btn btn-secondary"
                   onClick={() => {
-                    navigate("/products/list");
+                    navigate("/orders/list");
                   }}
                 >
                   Voltar

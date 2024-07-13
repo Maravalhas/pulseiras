@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useMemo, useRef } from "react";
 import { clsx } from "../../utilities/helpers";
 import { CaretDown, CaretUp } from "@phosphor-icons/react";
 
@@ -17,6 +17,7 @@ type Props = {
   selectableRows?: boolean;
   onRowSelected?: (row: any) => void;
   selectedRow?: number;
+  modifiers?: string;
 };
 
 const Table: React.FC<Props> = ({
@@ -28,14 +29,17 @@ const Table: React.FC<Props> = ({
   selectableRows,
   onRowSelected,
   selectedRow,
+  modifiers,
 }) => {
+  const ref = useRef<any>(null);
+
   const useSort = useMemo(() => {
     return sort && setSort;
   }, [sort, setSort]);
 
   return (
-    <div className="d-flex flex-column align-items-center justify-content-center">
-      <table className="table">
+    <div className={clsx("table-wrapper", modifiers && modifiers)}>
+      <table className="table" ref={ref}>
         <thead>
           <tr>
             {columns.map((column, index) => {
@@ -44,7 +48,12 @@ const Table: React.FC<Props> = ({
               return (
                 <td
                   className={clsx(useSort && column.sort ? "pointer" : "")}
-                  style={column.style}
+                  style={{
+                    ...column.style,
+                    width: column.style?.width,
+                    minWidth: column.style?.width,
+                    maxWidth: column.style?.width,
+                  }}
                   key={index}
                   onClick={() => {
                     if (useSort && column.sort) {
@@ -54,14 +63,20 @@ const Table: React.FC<Props> = ({
                           sort![1] === "ASC" ? "DESC" : "ASC",
                         ]);
                       } else {
-                        setSort!([column.sort, "asc"]);
+                        setSort!([column.sort, "ASC"]);
                       }
                     }
                   }}
                 >
                   {column.title}{" "}
                   {sorting ? (
-                    <>{sort![1] === "ASC" ? <CaretUp /> : <CaretDown />}</>
+                    <>
+                      {sort![1] === "ASC" ? (
+                        <CaretUp weight="bold" />
+                      ) : (
+                        <CaretDown weight="bold" />
+                      )}
+                    </>
                   ) : null}
                 </td>
               );
@@ -83,7 +98,12 @@ const Table: React.FC<Props> = ({
               >
                 {columns.map((column, index2) => (
                   <td
-                    style={column.style}
+                    style={{
+                      ...column.style,
+                      width: column.style?.width,
+                      minWidth: column.style?.width,
+                      maxWidth: column.style?.width,
+                    }}
                     key={index2}
                     onClick={(e) => {
                       if (column.button) {
@@ -98,7 +118,7 @@ const Table: React.FC<Props> = ({
             ))
           ) : (
             <tr>
-              <td colSpan={columns?.length} className="text-align-center p-4">
+              <td colSpan={columns?.length} className="text-align-center p-3">
                 Sem dados para apresentar
               </td>
             </tr>

@@ -7,6 +7,7 @@ export const getAllOrders = ({
   order,
   products,
   date,
+  state,
 }: {
   offset?: number;
   limit?: number;
@@ -14,6 +15,7 @@ export const getAllOrders = ({
   order?: string[];
   products?: number;
   date?: string;
+  state?: number;
 }) => {
   return axios.get("/orders", {
     params: {
@@ -23,6 +25,7 @@ export const getAllOrders = ({
       order,
       products,
       date,
+      state,
     },
   });
 };

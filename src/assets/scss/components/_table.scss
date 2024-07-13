@@ -1,6 +1,6 @@
 .table {
   border-radius: 8px;
-  overflow: hidden;
+  margin: 0px;
 
   thead tr td {
     color: white;
@@ -37,10 +37,20 @@
   }
 }
 
-.table + .loading {
-  position: absolute;
-  background-color: white;
-  padding: 1.25rem;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.table-wrapper {
+  position: relative;
+  overflow-x: scroll;
+
+  .loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    position: absolute;
+    background-color: white;
+    padding: 1.25rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
 }

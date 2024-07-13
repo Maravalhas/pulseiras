@@ -8,13 +8,15 @@ import React from "react";
 const Topbar = () => {
   return (
     <div className="topbar">
-      <Dropdown className="aside-toggle-mobile me-3">
+      <Dropdown className="aside-toggle-mobile me-3" autoClose>
         <Dropdown.Toggle as={CustomToggle}></Dropdown.Toggle>
-        <Dropdown.Menu>
+        <Dropdown.Menu rootCloseEvent="click">
           {menus.map((menu, index) => (
-            <Link key={index} to={menu.to}>
-              {menu.title}
-            </Link>
+            <Dropdown.ItemText>
+              <Link key={index} to={menu.to} className="my-1">
+                {menu.title}
+              </Link>
+            </Dropdown.ItemText>
           ))}
         </Dropdown.Menu>
       </Dropdown>
