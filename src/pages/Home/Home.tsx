@@ -2,6 +2,7 @@ import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import { getAllOrders } from "../../axios/orders";
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 
 const Home = () => {
   const [ordersData, setOrdersData] = useState<any>();
@@ -137,38 +138,46 @@ const Home = () => {
   }, [monthsOrders]);
 
   return (
-    <div className="d-flex">
-      <div className="col-12 col-lg-6 col-xl-4 p-2">
-        <div className="card card-shadow p-2">
-          <ReactApexChart
-            options={ordersChart?.options}
-            series={ordersChart?.series}
-            type="line"
-            height={400}
-          />
+    <>
+      <Breadcrumb />
+      <div className="card">
+        <div className="card-header">
+          <div className="card-title">Dashboards</div>
+        </div>
+        <div className="card-body p-0 mt-2 d-flex flex-wrap">
+          <div className="col-12 col-lg-6 col-xl-4 p-2">
+            <div className="card card-shadow p-2">
+              <ReactApexChart
+                options={ordersChart?.options}
+                series={ordersChart?.series}
+                type="line"
+                height={400}
+              />
+            </div>
+          </div>
+          <div className="col-12 col-lg-6 col-xl-4 p-2">
+            <div className="card card-shadow p-2">
+              <ReactApexChart
+                options={productsChart?.options}
+                series={productsChart?.series}
+                type="line"
+                height={400}
+              />
+            </div>
+          </div>
+          <div className="col-12 col-lg-6 col-xl-4 p-2">
+            <div className="card card-shadow p-2">
+              <ReactApexChart
+                options={incomeChart?.options}
+                series={incomeChart?.series}
+                type="line"
+                height={400}
+              />
+            </div>
+          </div>
         </div>
       </div>
-      <div className="col-12 col-lg-6 col-xl-4 p-2">
-        <div className="card card-shadow p-2">
-          <ReactApexChart
-            options={productsChart?.options}
-            series={productsChart?.series}
-            type="line"
-            height={400}
-          />
-        </div>
-      </div>
-      <div className="col-12 col-lg-6 col-xl-4 p-2">
-        <div className="card card-shadow p-2">
-          <ReactApexChart
-            options={incomeChart?.options}
-            series={incomeChart?.series}
-            type="line"
-            height={400}
-          />
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 

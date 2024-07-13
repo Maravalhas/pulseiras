@@ -9,6 +9,7 @@ import {
   updateProduct,
 } from "../../axios/products";
 import { toast } from "react-toastify";
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 
 type Product = {
   id?: number;
@@ -102,145 +103,153 @@ const Detail = () => {
   }
 
   return (
-    <div className="card">
-      <div className="card-header">
-        <div className="card-title">
-          {productId ? "Detalhe do produto" : "Novo produto"}
-        </div>
-        <div className="card-toolbar">
-          <Button
-            modifiers="me-3"
-            loading={submiting}
-            form="productForm"
-            submit
-          >
-            Guardar
-          </Button>
-          <button
-            className="btn btn-secondary"
-            onClick={() => {
-              navigate("/products/list");
-            }}
-          >
-            Voltar
-          </button>
-        </div>
-      </div>
-      <form
-        id="productForm"
-        className="card-body px-0"
-        onSubmit={(e) => {
-          e.preventDefault();
-          setSubmiting(true);
-          if (productId) {
-            submitUpdateProduct();
-          } else {
-            submitCreateProduct();
-          }
-        }}
-      >
-        <div className="info-card">
-          <div className="info-card-title">
-            <p>Dados Gerais</p>
+    <>
+      <Breadcrumb
+        locations={[
+          { title: "Produtos", to: "/products/list" },
+          { title: productId ? `${productId}` : "Novo" },
+        ]}
+      />
+      <div className="card">
+        <div className="card-header">
+          <div className="card-title">
+            {productId ? "Detalhe do produto" : "Novo produto"}
           </div>
-          <div className="info-card-body">
-            <Form.Group controlId="inputName" className="mb-3">
-              <Form.Label>Nome</Form.Label>
-              <Form.Control
-                value={product?.name || ""}
-                onChange={(e) => {
-                  updateProductState(e.target.value, "name");
-                }}
-                placeholder="Nome do produto"
-                required
-                disabled={!product}
-              />
-            </Form.Group>
-            <Form.Group controlId="inputName" className="mb-3">
-              <Form.Label>Descrição</Form.Label>
-              <Form.Control
-                value={product?.description || ""}
-                onChange={(e) => {
-                  updateProductState(e.target.value, "description");
-                }}
-                placeholder="Breve descrição sobre o produto"
-                as="textarea"
-                disabled={!product}
-              />
-            </Form.Group>
-            <Form.Group controlId="inputName">
-              <Form.Label>Categoria</Form.Label>
-              <Form.Select
-                required
-                value={product?.id_category || ""}
-                onChange={(e) => {
-                  updateProductState(+e.target.value, "id_category");
-                }}
-                disabled={!product}
-              >
-                <option value="" disabled>
-                  Selecione uma categoria
-                </option>
-                {categories.map((category: any) => (
-                  <option key={category.value} value={category.value}>
-                    {category.label}
+          <div className="card-toolbar">
+            <Button
+              modifiers="me-3"
+              loading={submiting}
+              form="productForm"
+              submit
+            >
+              Guardar
+            </Button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => {
+                navigate("/products/list");
+              }}
+            >
+              Voltar
+            </button>
+          </div>
+        </div>
+        <form
+          id="productForm"
+          className="card-body px-0"
+          onSubmit={(e) => {
+            e.preventDefault();
+            setSubmiting(true);
+            if (productId) {
+              submitUpdateProduct();
+            } else {
+              submitCreateProduct();
+            }
+          }}
+        >
+          <div className="info-card">
+            <div className="info-card-title">
+              <p>Dados Gerais</p>
+            </div>
+            <div className="info-card-body">
+              <Form.Group controlId="inputName" className="mb-3">
+                <Form.Label>Nome</Form.Label>
+                <Form.Control
+                  value={product?.name || ""}
+                  onChange={(e) => {
+                    updateProductState(e.target.value, "name");
+                  }}
+                  placeholder="Nome do produto"
+                  required
+                  disabled={!product}
+                />
+              </Form.Group>
+              <Form.Group controlId="inputName" className="mb-3">
+                <Form.Label>Descrição</Form.Label>
+                <Form.Control
+                  value={product?.description || ""}
+                  onChange={(e) => {
+                    updateProductState(e.target.value, "description");
+                  }}
+                  placeholder="Breve descrição sobre o produto"
+                  as="textarea"
+                  disabled={!product}
+                />
+              </Form.Group>
+              <Form.Group controlId="inputName">
+                <Form.Label>Categoria</Form.Label>
+                <Form.Select
+                  required
+                  value={product?.id_category || ""}
+                  onChange={(e) => {
+                    updateProductState(+e.target.value, "id_category");
+                  }}
+                  disabled={!product}
+                >
+                  <option value="" disabled>
+                    Selecione uma categoria
                   </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </div>
-        </div>
-        <div className="info-card">
-          <div className="info-card-title">
-            <p>Dados Financeiros</p>
-          </div>
-          <div className="info-card-body">
-            <Form.Group controlId="inputName" className="mb-3">
-              <Form.Label>Stock</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Quantidade em stock"
-                value={product?.stock || 0}
-                onChange={(e) => {
-                  updateProductState(+e.target.value, "stock");
-                }}
-                disabled={!product}
-              />
-            </Form.Group>
-            <Form.Group controlId="inputName">
-              <Form.Label>Preço (€)</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Preço do produto"
-                value={product?.price || 0}
-                onChange={(e) => {
-                  updateProductState(+e.target.value, "price");
-                }}
-                disabled={!product}
-              />
-            </Form.Group>
-          </div>
-        </div>
-        <div className="info-card">
-          <div className="info-card-title"></div>
-          <div className="info-card-body">
-            <div className="d-flex justify-content-end">
-              <Button loading={submiting} modifiers="me-3" submit>
-                Guardar
-              </Button>
-              <button
-                className="btn btn-secondary"
-                onClick={() => {
-                  navigate("/products/list");
-                }}
-              >
-                Voltar
-              </button>
+                  {categories.map((category: any) => (
+                    <option key={category.value} value={category.value}>
+                      {category.label}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
             </div>
           </div>
-        </div>
-      </form>
-    </div>
+          <div className="info-card">
+            <div className="info-card-title">
+              <p>Dados Financeiros</p>
+            </div>
+            <div className="info-card-body">
+              <Form.Group controlId="inputName" className="mb-3">
+                <Form.Label>Stock</Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder="Quantidade em stock"
+                  value={product?.stock || 0}
+                  onChange={(e) => {
+                    updateProductState(+e.target.value, "stock");
+                  }}
+                  disabled={!product}
+                />
+              </Form.Group>
+              <Form.Group controlId="inputName">
+                <Form.Label>Preço (€)</Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder="Preço do produto"
+                  value={product?.price || 0}
+                  onChange={(e) => {
+                    updateProductState(+e.target.value, "price");
+                  }}
+                  disabled={!product}
+                />
+              </Form.Group>
+            </div>
+          </div>
+          <div className="info-card">
+            <div className="info-card-title"></div>
+            <div className="info-card-body">
+              <div className="d-flex justify-content-end">
+                <Button loading={submiting} modifiers="me-3" submit>
+                  Guardar
+                </Button>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => {
+                    navigate("/products/list");
+                  }}
+                >
+                  Voltar
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </>
   );
 };
 

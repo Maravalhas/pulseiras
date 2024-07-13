@@ -15,6 +15,7 @@ import Button from "../../components/Button/Button";
 import LabelState from "../../components/State/State";
 import { toast } from "react-toastify";
 import { getAllOrdersStates } from "../../axios/orders_states";
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 
 const List = () => {
   const navigate = useNavigate();
@@ -210,68 +211,71 @@ const List = () => {
   );
 
   return (
-    <div className="card">
-      <div className="card-header">
-        <div className="card-title">Encomendas</div>
-        <div className="card-toolbar">
-          <button
-            className="btn btn-primary"
-            onClick={() => {
-              navigate("/orders/list/new");
-            }}
-          >
-            Nova Encomenda
-          </button>
-        </div>
-      </div>
-      <div className="card-body px-0">
-        <div className="d-flex justify-content-between align-items-center flex-wrap mb-3">
-          <div className="d-flex my-2">
-            <Form.Control
-              placeholder="Pesquisar"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
-              className="flex-grow me-3"
-            />
-            <Form.Select
-              value={selectedState}
-              onChange={(e) => {
-                setSelectedState(parseInt(e.target.value));
+    <>
+      <Breadcrumb locations={[{ title: "Encomendas" }]} />
+      <div className="card">
+        <div className="card-header">
+          <div className="card-title">Encomendas</div>
+          <div className="card-toolbar">
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                navigate("/orders/list/new");
               }}
             >
-              <option value={0}>Todos os estados</option>
-              {states.map((state: any) => (
-                <option key={state.id} value={state.id}>
-                  {state.name}
-                </option>
-              ))}
-            </Form.Select>
+              Nova Encomenda
+            </button>
           </div>
-          <p className="my-2 text-muted">{data.total} encomendas</p>
         </div>
-        <Table
-          data={data.data}
-          columns={columns}
-          loading={loading}
-          sort={order}
-          setSort={setOrder}
-          selectableRows
-          onRowSelected={(row) => {
-            navigate(`/orders/list/${row.id}`);
-          }}
-          modifiers="mb-3"
-        />
-        <div className="d-flex justify-content-center">
-          <Pagination
-            totalPages={data.total ? Math.ceil(data.total / offset[0]) : 0}
-            pagination={offset}
-            setPagination={setOffset}
+        <div className="card-body px-0">
+          <div className="d-flex justify-content-between align-items-center flex-wrap mb-3">
+            <div className="d-flex my-2">
+              <Form.Control
+                placeholder="Pesquisar"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                }}
+                className="flex-grow me-3"
+              />
+              <Form.Select
+                value={selectedState}
+                onChange={(e) => {
+                  setSelectedState(parseInt(e.target.value));
+                }}
+              >
+                <option value={0}>Todos os estados</option>
+                {states.map((state: any) => (
+                  <option key={state.id} value={state.id}>
+                    {state.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </div>
+            <p className="my-2 text-muted">{data.total} encomendas</p>
+          </div>
+          <Table
+            data={data.data}
+            columns={columns}
+            loading={loading}
+            sort={order}
+            setSort={setOrder}
+            selectableRows
+            onRowSelected={(row) => {
+              navigate(`/orders/list/${row.id}`);
+            }}
+            modifiers="mb-3"
           />
+          <div className="d-flex justify-content-center">
+            <Pagination
+              totalPages={data.total ? Math.ceil(data.total / offset[0]) : 0}
+              pagination={offset}
+              setPagination={setOffset}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

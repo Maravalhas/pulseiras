@@ -8,6 +8,7 @@ import { formatCurrency } from "../../utilities/helpers";
 import { getAllShippingMethods } from "../../axios/shipping_methods";
 import { createOrder, getOrderById, updateOrder } from "../../axios/orders";
 import { toast } from "react-toastify";
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 
 type Order = {
   id?: number;
@@ -351,198 +352,211 @@ const Detail = () => {
   ];
 
   return (
-    <div className="card">
-      <div className="card-header">
-        <div className="card-title">
-          {orderId ? "Detalhe da encomenda" : "Nova encomenda"}
+    <>
+      <Breadcrumb
+        locations={[
+          { title: "Encomendas", to: "/orders/list" },
+          { title: orderId ? `${orderId}` : "Nova" },
+        ]}
+      />
+      <div className="card">
+        <div className="card-header">
+          <div className="card-title">
+            {orderId ? "Detalhe da encomenda" : "Nova encomenda"}
+          </div>
+          <div className="card-toolbar">
+            <Button
+              modifiers="me-3"
+              loading={submiting}
+              form="orderForm"
+              submit
+            >
+              Guardar
+            </Button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => {
+                navigate("/orders/list");
+              }}
+            >
+              Voltar
+            </button>
+          </div>
         </div>
-        <div className="card-toolbar">
-          <Button modifiers="me-3" loading={submiting} form="orderForm" submit>
-            Guardar
-          </Button>
-          <button
-            className="btn btn-secondary"
-            onClick={() => {
-              navigate("/orders/list");
+        <div className="card-body">
+          <form
+            id="orderForm"
+            className="card-body px-0"
+            onSubmit={(e) => {
+              e.preventDefault();
+              setSubmiting(true);
+              if (orderId) {
+                submitUpdateOrder();
+              } else {
+                submitCreateOrder();
+              }
             }}
           >
-            Voltar
-          </button>
+            <div className="info-card">
+              <div className="info-card-title">
+                <p>Dados Gerais</p>
+              </div>
+              <div className="info-card-body">
+                <Form.Group controlId="inputName" className="mb-3">
+                  <Form.Label>Nome</Form.Label>
+                  <Form.Control
+                    value={order?.name || ""}
+                    onChange={(e) => {
+                      updateOrderState(e.target.value, "name");
+                    }}
+                    placeholder="Nome do comprador"
+                    required
+                    disabled={!editable}
+                  />
+                </Form.Group>
+                <Form.Group controlId="inputAddress" className="mb-3">
+                  <Form.Label>Endereço</Form.Label>
+                  <Form.Control
+                    value={order?.address || ""}
+                    onChange={(e) => {
+                      updateOrderState(e.target.value, "address");
+                    }}
+                    placeholder="Endereço de entrega"
+                    as="textarea"
+                    disabled={!editable}
+                  />
+                </Form.Group>
+                <div className="d-flex">
+                  <Form.Group
+                    controlId="inputZipCode"
+                    className="mb-3 col-5 pe-3"
+                  >
+                    <Form.Label>Código postal</Form.Label>
+                    <Form.Control
+                      value={order?.zipcode || ""}
+                      onChange={(e) => {
+                        updateOrderState(e.target.value, "zipcode");
+                      }}
+                      placeholder="Código postal"
+                      disabled={!editable}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="inputLocality" className="mb-3 col-7">
+                    <Form.Label>Localidade</Form.Label>
+                    <Form.Control
+                      value={order?.locality || ""}
+                      onChange={(e) => {
+                        updateOrderState(e.target.value, "locality");
+                      }}
+                      placeholder="Localidade"
+                      disabled={!editable}
+                    />
+                  </Form.Group>
+                </div>
+                <Form.Group controlId="inputName">
+                  <Form.Label>Método de envio</Form.Label>
+                  <Form.Select
+                    required
+                    value={order?.id_shipping_method || ""}
+                    onChange={(e) => {
+                      updateOrderState(+e.target.value, "id_shipping_method");
+                      updateOrderState(null, "shipping_price");
+                    }}
+                    disabled={!editable}
+                  >
+                    <option value="" disabled>
+                      Selecione um método de envio
+                    </option>
+                    {shippingMethods.map((shipping: any) => (
+                      <option key={shipping.value} value={shipping.value}>
+                        {shipping.label}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </div>
+            </div>
+            <div className="info-card">
+              <div className="info-card-title">
+                <p>Produtos</p>
+              </div>
+              <div className="info-card-body">
+                <Table data={orderProducts} columns={columns} />
+                {editable ? (
+                  <p
+                    className="text-primary pointer fw-bold"
+                    onClick={() => {
+                      setOrderProducts((products) => [
+                        ...products,
+                        {} as OrderProduct,
+                      ]);
+                    }}
+                  >
+                    Adicionar produto
+                  </p>
+                ) : null}
+              </div>
+            </div>
+            <div className="info-card">
+              <div className="info-card-title">
+                <p>Resumo</p>
+              </div>
+              <div className="info-card-body">
+                <table>
+                  <tbody>
+                    <tr>
+                      <td style={{ width: "100%" }}></td>
+                      <td className="text-align-right pe-5 fw-semibold">
+                        Produtos:
+                      </td>
+                      <td>{total ? formatCurrency(total) : "-"}</td>
+                    </tr>
+                    <tr>
+                      <td style={{ width: "100%" }}></td>
+                      <td className="text-align-right pe-5 fw-semibold">
+                        Portes:
+                      </td>
+                      <td>
+                        {shippingPrice ? formatCurrency(shippingPrice!) : "-"}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{ width: "100%" }}></td>
+                      <td className="text-align-right pe-5 fw-semibold">
+                        Total:
+                      </td>
+                      <td className="fw-semibold">
+                        {totalWithShipping
+                          ? formatCurrency(totalWithShipping)
+                          : "-"}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div className="info-card">
+              <div className="info-card-title"></div>
+              <div className="info-card-body">
+                <div className="d-flex justify-content-end">
+                  <Button loading={submiting} modifiers="me-3" submit>
+                    Guardar
+                  </Button>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      navigate("/orders/list");
+                    }}
+                  >
+                    Voltar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
-      <div className="card-body">
-        <form
-          id="orderForm"
-          className="card-body px-0"
-          onSubmit={(e) => {
-            e.preventDefault();
-            setSubmiting(true);
-            if (orderId) {
-              submitUpdateOrder();
-            } else {
-              submitCreateOrder();
-            }
-          }}
-        >
-          <div className="info-card">
-            <div className="info-card-title">
-              <p>Dados Gerais</p>
-            </div>
-            <div className="info-card-body">
-              <Form.Group controlId="inputName" className="mb-3">
-                <Form.Label>Nome</Form.Label>
-                <Form.Control
-                  value={order?.name || ""}
-                  onChange={(e) => {
-                    updateOrderState(e.target.value, "name");
-                  }}
-                  placeholder="Nome do comprador"
-                  required
-                  disabled={!editable}
-                />
-              </Form.Group>
-              <Form.Group controlId="inputAddress" className="mb-3">
-                <Form.Label>Endereço</Form.Label>
-                <Form.Control
-                  value={order?.address || ""}
-                  onChange={(e) => {
-                    updateOrderState(e.target.value, "address");
-                  }}
-                  placeholder="Endereço de entrega"
-                  as="textarea"
-                  disabled={!editable}
-                />
-              </Form.Group>
-              <div className="d-flex">
-                <Form.Group
-                  controlId="inputZipCode"
-                  className="mb-3 col-5 pe-3"
-                >
-                  <Form.Label>Código postal</Form.Label>
-                  <Form.Control
-                    value={order?.zipcode || ""}
-                    onChange={(e) => {
-                      updateOrderState(e.target.value, "zipcode");
-                    }}
-                    placeholder="Código postal"
-                    disabled={!editable}
-                  />
-                </Form.Group>
-                <Form.Group controlId="inputLocality" className="mb-3 col-7">
-                  <Form.Label>Localidade</Form.Label>
-                  <Form.Control
-                    value={order?.locality || ""}
-                    onChange={(e) => {
-                      updateOrderState(e.target.value, "locality");
-                    }}
-                    placeholder="Localidade"
-                    disabled={!editable}
-                  />
-                </Form.Group>
-              </div>
-              <Form.Group controlId="inputName">
-                <Form.Label>Método de envio</Form.Label>
-                <Form.Select
-                  required
-                  value={order?.id_shipping_method || ""}
-                  onChange={(e) => {
-                    updateOrderState(+e.target.value, "id_shipping_method");
-                    updateOrderState(null, "shipping_price");
-                  }}
-                  disabled={!editable}
-                >
-                  <option value="" disabled>
-                    Selecione um método de envio
-                  </option>
-                  {shippingMethods.map((shipping: any) => (
-                    <option key={shipping.value} value={shipping.value}>
-                      {shipping.label}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-            </div>
-          </div>
-          <div className="info-card">
-            <div className="info-card-title">
-              <p>Produtos</p>
-            </div>
-            <div className="info-card-body">
-              <Table data={orderProducts} columns={columns} />
-              {editable ? (
-                <p
-                  className="text-primary pointer fw-bold"
-                  onClick={() => {
-                    setOrderProducts((products) => [
-                      ...products,
-                      {} as OrderProduct,
-                    ]);
-                  }}
-                >
-                  Adicionar produto
-                </p>
-              ) : null}
-            </div>
-          </div>
-          <div className="info-card">
-            <div className="info-card-title">
-              <p>Resumo</p>
-            </div>
-            <div className="info-card-body">
-              <table>
-                <tbody>
-                  <tr>
-                    <td style={{ width: "100%" }}></td>
-                    <td className="text-align-right pe-5 fw-semibold">
-                      Produtos:
-                    </td>
-                    <td>{total ? formatCurrency(total) : "-"}</td>
-                  </tr>
-                  <tr>
-                    <td style={{ width: "100%" }}></td>
-                    <td className="text-align-right pe-5 fw-semibold">
-                      Portes:
-                    </td>
-                    <td>
-                      {shippingPrice ? formatCurrency(shippingPrice!) : "-"}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ width: "100%" }}></td>
-                    <td className="text-align-right pe-5 fw-semibold">
-                      Total:
-                    </td>
-                    <td className="fw-semibold">
-                      {totalWithShipping
-                        ? formatCurrency(totalWithShipping)
-                        : "-"}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div className="info-card">
-            <div className="info-card-title"></div>
-            <div className="info-card-body">
-              <div className="d-flex justify-content-end">
-                <Button loading={submiting} modifiers="me-3" submit>
-                  Guardar
-                </Button>
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => {
-                    navigate("/orders/list");
-                  }}
-                >
-                  Voltar
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
+    </>
   );
 };
 

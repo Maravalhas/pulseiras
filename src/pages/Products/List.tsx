@@ -5,6 +5,7 @@ import Pagination from "../../components/Table/Pagination";
 import { getAllProducts } from "../../axios/products";
 import { Form } from "react-bootstrap";
 import moment from "moment";
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 
 const List = () => {
   const navigate = useNavigate();
@@ -75,53 +76,56 @@ const List = () => {
   ];
 
   return (
-    <div className="card">
-      <div className="card-header">
-        <div className="card-title">Produtos</div>
-        <div className="card-toolbar">
-          <button
-            className="btn btn-primary"
-            onClick={() => {
-              navigate("/products/list/new");
-            }}
-          >
-            Novo produto
-          </button>
-        </div>
-      </div>
-      <div className="card-body px-0">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <div>
-            <Form.Control
-              placeholder="Pesquisar produto"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
+    <>
+      <Breadcrumb locations={[{ title: "Produtos" }]} />
+      <div className="card">
+        <div className="card-header">
+          <div className="card-title">Produtos</div>
+          <div className="card-toolbar">
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                navigate("/products/list/new");
               }}
+            >
+              Novo produto
+            </button>
+          </div>
+        </div>
+        <div className="card-body px-0">
+          <div className="d-flex justify-content-between align-items-center flex-wrap mb-3">
+            <div className="d-flex my-2">
+              <Form.Control
+                placeholder="Pesquisar"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                }}
+              />
+            </div>
+            <p className="mb-0 text-muted my-2">{data.total} produtos</p>
+          </div>
+          <Table
+            data={data.data}
+            columns={columns}
+            loading={loading}
+            sort={order}
+            setSort={setOrder}
+            selectableRows
+            onRowSelected={(row) => {
+              navigate(`/products/list/${row.id}`);
+            }}
+          />
+          <div className="d-flex justify-content-center">
+            <Pagination
+              totalPages={data.total ? Math.ceil(data.total / offset[0]) : 0}
+              pagination={offset}
+              setPagination={setOffset}
             />
           </div>
-          <p className="mb-0 text-muted">{data.total} produtos</p>
-        </div>
-        <Table
-          data={data.data}
-          columns={columns}
-          loading={loading}
-          sort={order}
-          setSort={setOrder}
-          selectableRows
-          onRowSelected={(row) => {
-            navigate(`/products/list/${row.id}`);
-          }}
-        />
-        <div className="d-flex justify-content-center">
-          <Pagination
-            totalPages={data.total ? Math.ceil(data.total / offset[0]) : 0}
-            pagination={offset}
-            setPagination={setOffset}
-          />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

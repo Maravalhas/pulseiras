@@ -1,0 +1,34 @@
+.breadcrumb {
+  height: 15px;
+  font-size: 11px;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+
+  .breadcrumb-item,
+  .breadcrumb-item > a {
+    color: $grey;
+    text-decoration: none;
+    cursor: auto;
+    transition: color 0.3s ease-out;
+  }
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    text-transform: uppercase;
+
+    &.link > a {
+      cursor: pointer;
+      &:hover {
+        color: $primary;
+      }
+    }
+
+    &:not(:first-child) {
+      &::before {
+        font-size: 9px;
+        color: $grey;
+      }
+    }
+  }
+}
