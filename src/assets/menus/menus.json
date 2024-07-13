@@ -1,11 +1,11 @@
 [
   {
-    "title": "Orders",
+    "title": "Encomendas",
     "to": "/orders/list",
     "icon": "Package"
   },
   {
-    "title": "Products",
+    "title": "Produtos",
     "to": "/products/list",
     "icon": "ShoppingBag"
   }
