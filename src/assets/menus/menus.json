@@ -11,7 +11,7 @@
   },
   {
     "title": "Produtos",
-    "to": "/products/list",
-    "icon": "ShoppingBag"
+    "to": "/maintenance",
+    "icon": "Gear"
   }
 ]

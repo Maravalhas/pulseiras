@@ -1,0 +1,25 @@
+.nav.nav-tabs {
+  border: unset !important;
+  margin-bottom: 0.75rem;
+
+  .nav-item {
+    > button {
+      border: unset !important;
+      border-radius: 16px !important;
+      background-color: $light-grey;
+
+      &:hover {
+        background-color: $grey;
+      }
+
+      &.active {
+        background-color: $primary;
+        color: white;
+      }
+    }
+
+    &:not(:last-child) > button {
+      margin-right: 0.5rem;
+    }
+  }
+}

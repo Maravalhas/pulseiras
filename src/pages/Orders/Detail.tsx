@@ -172,7 +172,7 @@ const Detail = () => {
         res.data.data.map((product: any) => ({
           ...product,
           value: product.id,
-          label: product.name,
+          label: `${product.name} (${product.stock})`,
         }))
       );
     });
