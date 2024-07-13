@@ -26,9 +26,10 @@ body {
 
   #post {
     border-radius: 16px 16px 0px 0px;
+    margin-bottom: 1.25rem;
   }
 
-  .aside-toggle-mobile {
-    display: block;
+  .bottom-navigation {
+    display: flex;
   }
 }

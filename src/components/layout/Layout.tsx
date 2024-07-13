@@ -3,6 +3,7 @@ import { Suspense } from "react";
 
 import Topbar from "./Topbar";
 import Aside from "./Aside";
+import BottomNavigation from "./BottomNavigation";
 
 const Layout = () => {
   return (
@@ -16,6 +17,7 @@ const Layout = () => {
           </Suspense>
         </div>
       </div>
+      <BottomNavigation />
     </>
   );
 };

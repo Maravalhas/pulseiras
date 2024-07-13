@@ -1,5 +1,10 @@
 [
   {
+    "title": "Início",
+    "to": "/home",
+    "icon": "House"
+  },
+  {
     "title": "Encomendas",
     "to": "/orders/list",
     "icon": "Package"

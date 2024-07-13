@@ -10,7 +10,7 @@ import Error404 from "../pages/Error404/Error404";
 const Redirect = () => {
   const [search] = useSearchParams();
 
-  return <Navigate to={search.get("link") || "/"} />;
+  return <Navigate to={search.get("link") || "/home"} />;
 };
 
 const Private = createBrowserRouter([
@@ -19,6 +19,10 @@ const Private = createBrowserRouter([
     children: [
       {
         path: "/",
+        element: <Navigate to="/home" />,
+      },
+      {
+        path: "/home",
         Component: React.lazy(() => import("../pages/Home/Home")),
       },
       {

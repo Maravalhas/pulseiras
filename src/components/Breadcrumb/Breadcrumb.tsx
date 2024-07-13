@@ -13,7 +13,7 @@ const Breadcrumb: React.FC<Props> = ({ locations }) => {
     <BsBreadcrumb className="breadcrumb">
       <BsBreadcrumb.Item
         onClick={() => {
-          navigate("/");
+          navigate("/home");
         }}
         active={!locations?.length}
         className="link"
