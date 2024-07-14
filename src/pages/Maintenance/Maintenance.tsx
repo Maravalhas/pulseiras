@@ -4,10 +4,17 @@ import { useNavigate, useParams } from "react-router-dom";
 import Products from "./Products/Products";
 import Shipping from "./Shipping/Shipping";
 import Categories from "./Categories/Categories";
+import { useEffect } from "react";
 
 const Maintenance = () => {
   const navigate = useNavigate();
   const tab = useParams().id;
+
+  useEffect(() => {
+    if (!tab) {
+      navigate("/maintenance/products");
+    }
+  }, []);
 
   return (
     <>
@@ -25,13 +32,13 @@ const Maintenance = () => {
             className="my-2"
           >
             <Tab title="Produtos" eventKey="products">
-              <Products />
+              {tab === "products" ? <Products /> : null}
             </Tab>
             <Tab title="Categorias de Produtos" eventKey="categories">
-              <Categories />
+              {tab === "categories" ? <Categories /> : null}
             </Tab>
             <Tab title="Métodos de Envio" eventKey="methods">
-              <Shipping />
+              {tab === "methods" ? <Shipping /> : null}
             </Tab>
           </Tabs>
         </div>

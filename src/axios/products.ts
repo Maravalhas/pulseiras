@@ -5,11 +5,13 @@ export const getAllProducts = ({
   limit,
   search,
   order,
+  active,
 }: {
   offset?: number;
   limit?: number;
   search?: string;
   order?: string[];
+  active?: number[];
 }) => {
   return axios.get("/products", {
     params: {
@@ -17,6 +19,7 @@ export const getAllProducts = ({
       limit,
       search,
       order,
+      active,
     },
   });
 };
@@ -27,32 +30,4 @@ export const createProduct = (body: any) => {
 
 export const updateProduct = (id: number, body: any) => {
   return axios.put(`/products/${id}`, body);
-};
-
-export const getProductById = (id: number) => {
-  return axios.get(`/products/${id}`);
-};
-
-export const getAllProductsCategories = ({
-  offset,
-  limit,
-  search,
-  order,
-  active,
-}: {
-  offset?: number;
-  limit?: number;
-  search?: string;
-  order?: string[];
-  active?: number[];
-}) => {
-  return axios.get("/products/categories", {
-    params: {
-      offset,
-      limit,
-      search,
-      order,
-      active,
-    },
-  });
 };

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import {
   createProduct,
   getAllProducts,
-  getAllProductsCategories,
   updateProduct,
 } from "../../../axios/products";
 import Table from "../../../components/Table/Table";
@@ -11,6 +10,7 @@ import Pagination from "../../../components/Table/Pagination";
 import Button from "../../../components/Button/Button";
 import { Form } from "react-bootstrap";
 import { toast } from "react-toastify";
+import { getAllProductsCategories } from "../../../axios/products_categories";
 
 type Product = {
   id?: number;
@@ -77,7 +77,7 @@ const Products = () => {
       title: "Nome",
       content: (row: any) => row.name,
       sort: "name",
-      style: { width: "250px" },
+      style: { width: "200px" },
     },
     {
       title: "Categoria",
@@ -283,6 +283,7 @@ const Products = () => {
                   ))}
                 </Form.Select>
               </Form.Group>
+              <label className="separator my-3" />
               <Form.Group controlId="inputName" className="mb-3">
                 <Form.Label>Stock</Form.Label>
                 <Form.Control

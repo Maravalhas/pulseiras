@@ -3,8 +3,13 @@ import Table from "../../../components/Table/Table";
 import { useEffect, useState } from "react";
 import Pagination from "../../../components/Table/Pagination";
 import Button from "../../../components/Button/Button";
-import { getAllProductsCategories } from "../../../axios/products";
 import moment from "moment";
+import {
+  createProductsCategories,
+  getAllProductsCategories,
+  updateProductsCategories,
+} from "../../../axios/products_categories";
+import { toast } from "react-toastify";
 
 type Category = {
   id: number;
@@ -69,7 +74,7 @@ const Categories = () => {
     },
     {
       title: "Descrição",
-      content: (row: any) => row.description,
+      content: (row: any) => row.description || "-",
       sort: "description",
     },
     {
@@ -82,11 +87,43 @@ const Categories = () => {
   ];
 
   function submitCreateCategory() {
-    // Implement createCategory
+    const body = {
+      name: selectedCategory!.name,
+      description: selectedCategory!.description,
+    };
+
+    createProductsCategories(body)
+      .then(() => {
+        toast.success("Categoria criada com sucesso");
+        setSelectedCategory(null);
+        setSubmiting(false);
+        getData();
+      })
+      .catch((err) => {
+        toast.error(err.response?.data?.message || "Erro ao criar categoria");
+        setSubmiting(false);
+      });
   }
 
   function submitUpdateCategory() {
-    // Implement updateCategory
+    const body = {
+      name: selectedCategory!.name,
+      description: selectedCategory!.description,
+    };
+
+    updateProductsCategories(selectedCategory!.id, body)
+      .then(() => {
+        toast.success("Categoria atualizada com sucesso");
+        setSelectedCategory(null);
+        setSubmiting(false);
+        getData();
+      })
+      .catch((err) => {
+        toast.error(
+          err.response?.data?.message || "Erro ao atualizar categoria"
+        );
+        setSubmiting(false);
+      });
   }
 
   return (
@@ -187,7 +224,7 @@ const Categories = () => {
                   as="textarea"
                   value={selectedCategory?.description || ""}
                   onChange={(e) => {
-                    updateCategoryState(+e.target.value, "description");
+                    updateCategoryState(e.target.value, "description");
                   }}
                   placeholder="Breve descrição sobre a categoria"
                   disabled={!selectedCategory}
