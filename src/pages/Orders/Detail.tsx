@@ -484,7 +484,7 @@ const Detail = () => {
                 <Table data={orderProducts} columns={columns} />
                 {editable ? (
                   <p
-                    className="text-primary pointer fw-bold"
+                    className="text-primary pointer fw-bold my-2"
                     onClick={() => {
                       setOrderProducts((products) => [
                         ...products,

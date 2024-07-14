@@ -25,7 +25,7 @@ const List = () => {
   const [data, setData] = useState<any>({});
   const [offset, setOffset] = useState([10, 1]);
   const [search, setSearch] = useState("");
-  const [order, setOrder] = useState(["created_at", "DESC"]);
+  const [order, setOrder] = useState(["createdAt", "DESC"]);
 
   const [selectedState, setSelectedState] = useState(0);
   const [states, setStates] = useState<any>([]);
@@ -91,9 +91,9 @@ const List = () => {
       {
         title: "Data da encomenda",
         content: (row: any) =>
-          moment(row.created_at).format("DD/MM/YYYY [às] HH:mm[h]"),
+          moment(row.createdAt).format("DD/MM/YYYY [às] HH:mm[h]"),
         style: { width: "210px" },
-        sort: "created_at",
+        sort: "createdAt",
       },
       {
         title: "Data da expedição",
@@ -227,7 +227,7 @@ const List = () => {
             </button>
           </div>
         </div>
-        <div className="card-body px-0">
+        <div className="card-body p-0">
           <div className="d-flex justify-content-between align-items-center flex-wrap mb-3">
             <div className="d-flex my-2">
               <Form.Control

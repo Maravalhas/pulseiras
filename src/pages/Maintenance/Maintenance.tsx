@@ -16,20 +16,21 @@ const Maintenance = () => {
         <div className="card-header">
           <div className="card-title">Manutenção</div>
         </div>
-        <div className="card-body p-0">
+        <div className="card-body p-0 ">
           <Tabs
             activeKey={tab}
             onSelect={(key) => {
               navigate(`/maintenance/${key}`);
             }}
+            className="my-2"
           >
-            <Tab title="Produtos" eventKey="produtos">
+            <Tab title="Produtos" eventKey="products">
               <Products />
             </Tab>
-            <Tab title="Categorias de Produtos" eventKey="categorias">
+            <Tab title="Categorias de Produtos" eventKey="categories">
               <Categories />
             </Tab>
-            <Tab title="Metodos de Envio" eventKey="metodos">
+            <Tab title="Métodos de Envio" eventKey="methods">
               <Shipping />
             </Tab>
           </Tabs>

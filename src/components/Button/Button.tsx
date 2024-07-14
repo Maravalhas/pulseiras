@@ -52,10 +52,11 @@ const Button = React.forwardRef<any, Props>(
           <CircleNotch
             className={clsx(
               "spinner",
-              children && iconPosition !== "right" && "mr-1",
+              children && iconPosition !== "right" && "me-1",
               children && iconPosition === "right" && "ml-1"
             )}
             size={20}
+            weight="bold"
           />
         ) : (
           <>
@@ -65,7 +66,7 @@ const Button = React.forwardRef<any, Props>(
                 size={20}
                 weight="bold"
                 className={clsx(
-                  children && iconPosition !== "right" && "mr-1",
+                  children && iconPosition !== "right" && "me-1",
                   children && iconPosition === "right" && "ml-1",
                   iconModifiers && iconModifiers
                 )}

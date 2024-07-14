@@ -15,3 +15,11 @@ export function getAllShippingMethods({
     params: { offset, limit, search, order },
   });
 }
+
+export function createShippingMethod(data: any) {
+  return axios.post("/shipping_methods", data);
+}
+
+export function updateShippingMethod(id: number, data: any) {
+  return axios.put(`/shipping_methods/${id}`, data);
+}

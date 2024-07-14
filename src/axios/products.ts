@@ -33,7 +33,7 @@ export const getProductById = (id: number) => {
   return axios.get(`/products/${id}`);
 };
 
-export const getAllProcuctsCategories = ({
+export const getAllProductsCategories = ({
   offset,
   limit,
   search,

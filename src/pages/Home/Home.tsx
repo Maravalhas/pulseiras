@@ -39,7 +39,7 @@ const Home = () => {
     let months: any = {};
 
     ordersData?.data?.forEach((order: any) => {
-      const month = moment(order.created_at).month();
+      const month = moment(order.createdAt).month();
       months[month] = months[month] ? [...months[month], order] : [order];
     });
 
