@@ -16,8 +16,8 @@ const Layout = () => {
             <Outlet />
           </Suspense>
         </div>
+        <BottomNavigation />
       </div>
-      <BottomNavigation />
     </>
   );
 };

@@ -79,12 +79,15 @@ const List = () => {
       },
       {
         title: "Endereço",
-        content: (row: any) => (
-          <>
-            <p className="mb-0">{row.address}</p>
-            <p className="mb-0">{row.zipcode + ", " + row.locality}</p>
-          </>
-        ),
+        content: (row: any) =>
+          row.address ? (
+            <>
+              <p className="mb-0">{row.address}</p>
+              <p className="mb-0">{row.zipcode + ", " + row.locality}</p>
+            </>
+          ) : (
+            "-"
+          ),
         sort: "address",
         style: { width: "250px" },
       },

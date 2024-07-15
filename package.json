@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc && vite build"
+    "build": "tsc && vite build",
+    "build-docker": "docker build . -t maravalhas/pulseiras-frontend"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.5",

@@ -217,7 +217,14 @@ const Products = () => {
             <div className="card-toolbar">
               <Button
                 onClick={() => {
-                  setSelectedProduct({} as Product);
+                  setSelectedProduct({
+                    name: "",
+                    description: "",
+                    id_category: 0,
+                    category: "",
+                    stock: 0,
+                    price: 0,
+                  } as Product);
                 }}
                 disabled={selectedProduct && !selectedProduct.id ? true : false}
               >

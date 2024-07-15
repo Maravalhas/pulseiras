@@ -4,13 +4,13 @@ body {
 
 #main {
   padding-left: $aside-width;
-  min-height: 100vh;
 }
 
 #post {
   background-color: $background;
 
-  height: calc(100vh - $topbar-height);
+  height: calc(100dvh - $topbar-height);
+
   border-radius: 16px 0px 0px 0px;
   padding: 1.25rem;
 
@@ -29,7 +29,7 @@ body {
   #post {
     border-radius: 16px 16px 0px 0px;
     margin-bottom: 3rem;
-    height: calc(100vh - $topbar-height * 2);
+    height: calc(100dvh - $topbar-height - $topbar-height);
   }
 
   .bottom-navigation {
