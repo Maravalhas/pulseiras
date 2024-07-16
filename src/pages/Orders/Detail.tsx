@@ -213,8 +213,8 @@ const Detail = () => {
         toast.success("Encomenda criada com sucesso");
         navigate("/orders/list");
       })
-      .catch(() => {
-        toast.error("Erro ao criar encomenda");
+      .catch((err) => {
+        toast.error(err.response?.data?.message || "Erro ao criar encomenda");
         setSubmiting(false);
       });
   }
@@ -240,8 +240,10 @@ const Detail = () => {
         toast.success("Encomenda atualizada com sucesso");
         navigate("/orders/list");
       })
-      .catch(() => {
-        toast.error("Erro ao atualizar encomenda");
+      .catch((err) => {
+        toast.error(
+          err.response?.data?.message || "Erro ao atualizar encomenda"
+        );
         setSubmiting(false);
       });
   }
