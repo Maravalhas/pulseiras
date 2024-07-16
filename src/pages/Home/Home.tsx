@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import { getAllOrders } from "../../axios/orders";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
+import { getProductFinalPrice } from "../../utilities/helpers";
 
 const Home = () => {
   const [ordersData, setOrdersData] = useState<any>();
@@ -114,7 +115,7 @@ const Home = () => {
                   acc +
                   order.OrdersProducts.reduce(
                     (acc: number, product: any) =>
-                      acc + product.quantity * product.price,
+                      acc + getProductFinalPrice(product),
                     0
                   ),
                 0

@@ -4,7 +4,7 @@ import { Form } from "react-bootstrap";
 import { useEffect, useMemo, useState } from "react";
 import Table from "../../components/Table/Table";
 import { getAllProducts } from "../../axios/products";
-import { formatCurrency } from "../../utilities/helpers";
+import { formatCurrency, getProductFinalPrice } from "../../utilities/helpers";
 import { getAllShippingMethods } from "../../axios/shipping_methods";
 import { createOrder, getOrderById, updateOrder } from "../../axios/orders";
 import { toast } from "react-toastify";
@@ -132,26 +132,6 @@ const Detail = () => {
       };
       return copy;
     });
-  }
-
-  function getProductFinalPrice(product: OrderProduct) {
-    let finalPrice =
-      product.price && product.quantity ? product.price * product.quantity : 0;
-
-    if (product.discount) {
-      switch (product.discount_type) {
-        case 1:
-          finalPrice = finalPrice - finalPrice * (+product.discount / 100);
-          break;
-        case 2:
-          finalPrice = finalPrice - +product.discount;
-          break;
-        case 3:
-          finalPrice = finalPrice - +product.discount * product.quantity;
-          break;
-      }
-    }
-    return finalPrice >= 0 ? finalPrice : 0;
   }
 
   const [products, setProducts] = useState<Product[]>([]);
