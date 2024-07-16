@@ -59,17 +59,7 @@ const Detail = () => {
   const [order, setOrder] = useState<Order | null>(null);
   const [orderProducts, setOrderProducts] = useState<OrderProduct[]>([]);
 
-  const editable = useMemo(() => {
-    if (order) {
-      if (orderId) {
-        if (order?.state_order && order?.state_order >= 4) {
-          return false;
-        }
-      }
-      return true;
-    }
-    return false;
-  }, [order]);
+  const editable = useMemo(() => true, [order]);
 
   const total = useMemo(() => {
     return orderProducts.reduce((acc, product) => {
@@ -152,7 +142,7 @@ const Detail = () => {
   }, [total, shippingPrice]);
 
   useEffect(() => {
-    getAllProducts({}).then((res) => {
+    getAllProducts({ order: ["name", "ASC"] }).then((res) => {
       setProducts(
         res.data.data.map((product: any) => ({
           ...product,
@@ -161,7 +151,7 @@ const Detail = () => {
         }))
       );
     });
-    getAllShippingMethods({}).then((res) => {
+    getAllShippingMethods({ order: ["name", "ASC"] }).then((res) => {
       setShippingMethods(
         res.data.data.map((shipping: any) => ({
           ...shipping,

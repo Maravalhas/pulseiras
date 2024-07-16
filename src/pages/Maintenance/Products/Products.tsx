@@ -2,6 +2,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import {
   createProduct,
+  deleteProduct,
   getAllProducts,
   updateProduct,
 } from "../../../axios/products";
@@ -11,6 +12,7 @@ import Button from "../../../components/Button/Button";
 import { Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { getAllProductsCategories } from "../../../axios/products_categories";
+import Confirmation from "../../../components/Confirmation/Confirmation";
 
 type Product = {
   id?: number;
@@ -102,6 +104,28 @@ const Products = () => {
         moment(row.createdAt).format("DD/MM/YYYY [às] HH:mm[h]"),
       sort: "createdAt",
       style: { width: "200px" },
+    },
+    {
+      content: (row: any) => (
+        <Confirmation
+          onConfirm={() => {
+            deleteProduct(row.id)
+              .then(() => {
+                getData();
+              })
+              .catch((err) => {
+                toast.error(
+                  err.response?.data?.message || "Erro ao eliminar o produto"
+                );
+              });
+          }}
+          message={"Tem a certeza que pretende eliminar este produto?"}
+        >
+          <Button icon="X" variant="danger" />
+        </Confirmation>
+      ),
+      style: { width: "80px" },
+      button: true,
     },
   ];
 

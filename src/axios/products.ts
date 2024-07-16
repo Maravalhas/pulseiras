@@ -31,3 +31,7 @@ export const createProduct = (body: any) => {
 export const updateProduct = (id: number, body: any) => {
   return axios.put(`/products/${id}`, body);
 };
+
+export const deleteProduct = (id: number) => {
+  return axios.delete(`/products/${id}`);
+};

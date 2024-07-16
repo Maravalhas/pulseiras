@@ -2,13 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Table from "../../components/Table/Table";
 import { getAllOrders, patchOrderState } from "../../axios/orders";
 import Pagination from "../../components/Table/Pagination";
-import {
-  Form,
-  OverlayTrigger,
-  Popover,
-  PopoverBody,
-  PopoverHeader,
-} from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import Button from "../../components/Button/Button";
@@ -16,6 +10,7 @@ import LabelState from "../../components/State/State";
 import { toast } from "react-toastify";
 import { getAllOrdersStates } from "../../axios/orders_states";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
+import Confirmation from "../../components/Confirmation/Confirmation";
 
 const List = () => {
   const navigate = useNavigate();
@@ -38,6 +33,7 @@ const List = () => {
       search,
       order,
       state: selectedState || undefined,
+      products: 1,
     }).then((res) => {
       setData(res.data);
     });
@@ -78,18 +74,17 @@ const List = () => {
         style: { width: "150px" },
       },
       {
-        title: "Endereço",
-        content: (row: any) =>
-          row.address ? (
-            <>
-              <p className="mb-0">{row.address}</p>
-              <p className="mb-0">{row.zipcode + ", " + row.locality}</p>
-            </>
-          ) : (
-            "-"
-          ),
-        sort: "address",
-        style: { width: "250px" },
+        title: "Produtos",
+        content: (row: any) => {
+          const products = row.OrdersProducts;
+
+          return products.map((product: any) => (
+            <p className="mb-0">
+              {product.name} x{product.quantity}
+            </p>
+          ));
+        },
+        style: { width: "150px" },
       },
       {
         title: "Data da encomenda",
@@ -147,12 +142,6 @@ const List = () => {
               break;
             case "C":
               config = {
-                icon: "Stamp",
-                header: "Encomenda pronta para expedição?",
-              };
-              break;
-            case "A":
-              config = {
                 icon: "Truck",
                 header: "Deseja confirmar a expedição desta encomenda?",
               };
@@ -167,42 +156,23 @@ const List = () => {
 
           if (config)
             return (
-              <OverlayTrigger
-                rootClose
-                trigger={"click"}
-                overlay={
-                  <Popover>
-                    <PopoverHeader>{config.header}</PopoverHeader>
-                    <PopoverBody>
-                      <Button
-                        modifiers="me-2"
-                        onClick={() => {
-                          patchOrderState(row.id)
-                            .then(() => {
-                              document.body.click();
-                              getData();
-                            })
-                            .catch((err) => {
-                              toast.error(err.response.data.message);
-                            });
-                        }}
-                      >
-                        Confirmar
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        onClick={() => {
-                          document.body.click();
-                        }}
-                      >
-                        Cancelar
-                      </Button>
-                    </PopoverBody>
-                  </Popover>
-                }
+              <Confirmation
+                message={config.header}
+                onConfirm={() => {
+                  patchOrderState(row.id)
+                    .then(() => {
+                      getData();
+                    })
+                    .catch((err) => {
+                      toast.error(
+                        err.response?.data?.message ||
+                          "Não foi possivel alterar o estado da encomenda"
+                      );
+                    });
+                }}
               >
                 <Button icon={config.icon} />
-              </OverlayTrigger>
+              </Confirmation>
             );
         },
         style: { width: "60px", textAlign: "center" },

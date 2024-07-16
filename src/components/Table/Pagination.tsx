@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Pagination as BsPagination, Form } from "react-bootstrap";
 import { clsx } from "../../utilities/helpers";
 
@@ -75,6 +75,12 @@ const Pagination: React.FC<Props> = ({
 
     return pages;
   }, [pagination, totalPages]);
+
+  useEffect(() => {
+    if (pagination[1] !== 1) {
+      setPagination([pagination[0], 1]);
+    }
+  }, [totalPages]);
 
   return (
     <div
