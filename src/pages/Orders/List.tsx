@@ -268,13 +268,11 @@ const List = () => {
             }}
             modifiers="mb-3"
           />
-          <div className="d-flex justify-content-center">
-            <Pagination
-              totalPages={data.total ? Math.ceil(data.total / offset[0]) : 0}
-              pagination={offset}
-              setPagination={setOffset}
-            />
-          </div>
+          <Pagination
+            totalPages={data.total ? Math.ceil(data.total / offset[0]) : 0}
+            pagination={offset}
+            setPagination={setOffset}
+          />
         </div>
       </div>
     </>

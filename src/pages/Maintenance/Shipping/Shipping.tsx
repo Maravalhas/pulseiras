@@ -159,13 +159,12 @@ const Shipping = () => {
               }}
               modifiers="mb-3"
             />
-            <div className="d-flex justify-content-center mb-2">
-              <Pagination
-                pagination={offset}
-                setPagination={setOffset}
-                totalPages={data.total ? Math.ceil(data.total / offset[0]) : 0}
-              />
-            </div>
+            <Pagination
+              pagination={offset}
+              setPagination={setOffset}
+              totalPages={data.total ? Math.ceil(data.total / offset[0]) : 0}
+              modifiers="mb-2"
+            />
           </div>
         </div>
       </div>
