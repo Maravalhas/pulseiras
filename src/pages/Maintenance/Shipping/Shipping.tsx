@@ -176,7 +176,10 @@ const Shipping = () => {
             <div className="card-toolbar">
               <Button
                 onClick={() => {
-                  setSelectedShipping({} as ShippingMethod);
+                  setSelectedShipping({
+                    name: "",
+                    price: 0,
+                  } as ShippingMethod);
                 }}
                 disabled={
                   selectedShipping && !selectedShipping.id ? true : false
@@ -201,7 +204,7 @@ const Shipping = () => {
               }}
             >
               <Form.Group controlId="inputName" className="mb-3">
-                <Form.Label>Nome</Form.Label>
+                <Form.Label className="required">Nome</Form.Label>
                 <Form.Control
                   value={selectedShipping?.name || ""}
                   onChange={(e) => {

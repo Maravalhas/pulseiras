@@ -247,7 +247,7 @@ const Products = () => {
               }}
             >
               <Form.Group controlId="inputName" className="mb-3">
-                <Form.Label>Nome</Form.Label>
+                <Form.Label className="required">Nome</Form.Label>
                 <Form.Control
                   value={selectedProduct?.name || ""}
                   onChange={(e) => {
@@ -271,7 +271,7 @@ const Products = () => {
                 />
               </Form.Group>
               <Form.Group controlId="inputName" className="mb-3">
-                <Form.Label>Categoria</Form.Label>
+                <Form.Label className="required">Categoria</Form.Label>
                 <Form.Select
                   required
                   value={selectedProduct?.id_category || ""}

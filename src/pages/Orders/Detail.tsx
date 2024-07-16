@@ -9,6 +9,7 @@ import { getAllShippingMethods } from "../../axios/shipping_methods";
 import { createOrder, getOrderById, updateOrder } from "../../axios/orders";
 import { toast } from "react-toastify";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
+import moment from "moment";
 
 type Order = {
   id?: number;
@@ -20,6 +21,7 @@ type Order = {
   shipping_price?: number;
   state_key?: number;
   state_order?: number;
+  date?: string;
 };
 
 type Product = {
@@ -88,6 +90,7 @@ const Detail = () => {
             state_key: res.data.state_key,
             state_order: res.data.state_order,
             shipping_price: res.data.shipping_price,
+            date: moment(res.data.createdAt).format("YYYY-MM-DD"),
           } as Order);
           setOrderProducts(
             res.data.OrdersProducts.map((product: any) => ({
@@ -104,7 +107,9 @@ const Detail = () => {
           navigate("/orders/list");
         });
     } else {
-      setOrder({} as Order);
+      setOrder({
+        date: moment().format("YYYY-MM-DD"),
+      } as Order);
     }
   }, [orderId]);
 
@@ -194,6 +199,7 @@ const Detail = () => {
       zipcode: order?.zipcode,
       locality: order?.locality,
       id_shipping_method: order?.id_shipping_method,
+      date: order?.date,
       products: orderProducts.map((product) => ({
         quantity: product.quantity,
         id_product: product.id_product,
@@ -220,6 +226,7 @@ const Detail = () => {
       zipcode: order?.zipcode,
       locality: order?.locality,
       id_shipping_method: order?.id_shipping_method,
+      date: order?.date,
       products: orderProducts.map((product) => ({
         quantity: product.quantity,
         id_product: product.id_product,
@@ -403,7 +410,7 @@ const Detail = () => {
               </div>
               <div className="info-card-body">
                 <Form.Group controlId="inputName" className="mb-3">
-                  <Form.Label>Nome</Form.Label>
+                  <Form.Label className="required">Nome</Form.Label>
                   <Form.Control
                     value={order?.name || ""}
                     onChange={(e) => {
@@ -412,6 +419,19 @@ const Detail = () => {
                     placeholder="Nome do comprador"
                     required
                     disabled={!editable}
+                  />
+                </Form.Group>
+                <Form.Group controlId="inputName" className="mb-3">
+                  <Form.Label className="required">Data</Form.Label>
+                  <Form.Control
+                    value={order?.date || ""}
+                    onChange={(e) => {
+                      updateOrderState(e.target.value, "date");
+                    }}
+                    placeholder="Data da encomenda"
+                    required
+                    disabled={!editable}
+                    type="date"
                   />
                 </Form.Group>
                 <Form.Group controlId="inputAddress" className="mb-3">
@@ -454,7 +474,7 @@ const Detail = () => {
                   </Form.Group>
                 </div>
                 <Form.Group controlId="inputName">
-                  <Form.Label>Método de envio</Form.Label>
+                  <Form.Label className="required">Método de envio</Form.Label>
                   <Form.Select
                     required
                     value={order?.id_shipping_method || ""}

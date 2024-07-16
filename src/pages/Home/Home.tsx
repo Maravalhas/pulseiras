@@ -137,6 +137,50 @@ const Home = () => {
     };
   }, [monthsOrders]);
 
+  const productsTypeChart = useMemo(() => {
+    let products: any = {};
+
+    ordersData?.data?.forEach((order: any) => {
+      order.OrdersProducts?.forEach((product: any) => {
+        if (products[product.id_product]) {
+          products[product.id_product].quantity += product.quantity;
+        } else {
+          products[product.id_product] = {
+            name: product.name,
+            quantity: product.quantity,
+          };
+        }
+      });
+    });
+
+    const data = Object.values(products).sort(
+      (a: any, b: any) => b.quantity - a.quantity
+    );
+
+    return {
+      series: data.map((product: any) => product.quantity),
+      options: {
+        labels: data.map(
+          (product: any) => `${product.name}: ${product.quantity}`
+        ),
+        dataLabels: {
+          formatter: function (_: any, config: any) {
+            return config.w.config.series[config.seriesIndex];
+          },
+        },
+        xaxis: {
+          categories: months.map((month) => month.month),
+        },
+        title: { text: "Vendas / Produto" },
+        chart: {
+          toolbar: {
+            show: false,
+          },
+        },
+      },
+    };
+  }, [ordersData]);
+
   return (
     <>
       <Breadcrumb />
@@ -171,6 +215,16 @@ const Home = () => {
                 options={incomeChart?.options}
                 series={incomeChart?.series}
                 type="line"
+                height={400}
+              />
+            </div>
+          </div>
+          <div className="col-12 col-lg-6 col-xl-4 p-2">
+            <div className="card card-shadow p-2">
+              <ReactApexChart
+                options={productsTypeChart?.options}
+                series={productsTypeChart?.series}
+                type="pie"
                 height={400}
               />
             </div>

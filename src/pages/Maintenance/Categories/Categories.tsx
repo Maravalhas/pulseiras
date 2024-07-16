@@ -182,7 +182,10 @@ const Categories = () => {
             <div className="card-toolbar">
               <Button
                 onClick={() => {
-                  setSelectedCategory({} as Category);
+                  setSelectedCategory({
+                    name: "",
+                    description: "",
+                  } as Category);
                 }}
                 disabled={
                   selectedCategory && !selectedCategory.id ? true : false
@@ -207,7 +210,7 @@ const Categories = () => {
               }}
             >
               <Form.Group controlId="inputName" className="mb-3">
-                <Form.Label>Nome</Form.Label>
+                <Form.Label className="required">Nome</Form.Label>
                 <Form.Control
                   value={selectedCategory?.name || ""}
                   onChange={(e) => {

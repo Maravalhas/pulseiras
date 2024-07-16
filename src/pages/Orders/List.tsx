@@ -93,18 +93,17 @@ const List = () => {
       },
       {
         title: "Data da encomenda",
-        content: (row: any) =>
-          moment(row.createdAt).format("DD/MM/YYYY [às] HH:mm[h]"),
-        style: { width: "210px" },
+        content: (row: any) => moment(row.createdAt).format("DD/MM/YYYY"),
+        style: { width: "210px", textAlign: "center" },
         sort: "createdAt",
       },
       {
         title: "Data da expedição",
         content: (row: any) =>
           row.date_shipped
-            ? moment(row.date_shipped).format("DD/MM/YYYY [às] HH:mm[h]")
+            ? moment(row.date_shipped).format("DD/MM/YYYY")
             : "-",
-        style: { width: "210px" },
+        style: { width: "210px", textAlign: "center" },
         sort: "date_shipped",
       },
       {
@@ -206,7 +205,7 @@ const List = () => {
               </OverlayTrigger>
             );
         },
-        style: { width: "50px" },
+        style: { width: "60px", textAlign: "center" },
         button: true,
       },
     ],
