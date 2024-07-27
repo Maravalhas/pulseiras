@@ -6,10 +6,16 @@ import Table from "../../components/Table/Table";
 import { getAllProducts } from "../../axios/products";
 import { formatCurrency, getProductFinalPrice } from "../../utilities/helpers";
 import { getAllShippingMethods } from "../../axios/shipping_methods";
-import { createOrder, getOrderById, updateOrder } from "../../axios/orders";
+import {
+  createOrder,
+  deleteOrder,
+  getOrderById,
+  updateOrder,
+} from "../../axios/orders";
 import { toast } from "react-toastify";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import moment from "moment";
+import Confirmation from "../../components/Confirmation/Confirmation";
 
 type Order = {
   id?: number;
@@ -55,6 +61,7 @@ const Detail = () => {
   const orderId = +useParams().id!;
 
   const [submiting, setSubmiting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const [order, setOrder] = useState<Order | null>(null);
   const [orderProducts, setOrderProducts] = useState<OrderProduct[]>([]);
@@ -218,6 +225,20 @@ const Detail = () => {
       });
   }
 
+  function submitDeleteOrder() {
+    deleteOrder(orderId)
+      .then(() => {
+        toast.success("Encomenda eliminada com sucesso");
+        navigate("/orders/list");
+      })
+      .catch((err) => {
+        toast.error(
+          err.response?.data?.message || "Erro ao eliminar encomenda"
+        );
+        setDeleting(false);
+      });
+  }
+
   const columns = [
     {
       title: "Produto",
@@ -344,6 +365,20 @@ const Detail = () => {
             {orderId ? "Detalhe da encomenda" : "Nova encomenda"}
           </div>
           <div className="card-toolbar">
+            {order?.state_order && order?.state_order < 4 ? (
+              <Confirmation
+                onConfirm={() => {
+                  setDeleting(true);
+                  submitDeleteOrder();
+                }}
+                message={"Tem a certeza que pretende eliminar esta encomenda?"}
+                placement="bottom"
+              >
+                <Button loading={deleting} variant="danger" modifiers="me-3">
+                  Eliminar
+                </Button>
+              </Confirmation>
+            ) : null}
             <Button
               modifiers="me-3"
               loading={submiting}

@@ -11,13 +11,20 @@ type Props = {
   onConfirm: () => void;
   message: string;
   children: ReactNode;
+  placement?: "top" | "bottom" | "left" | "right";
 };
 
-const Confirmation: React.FC<Props> = ({ onConfirm, message, children }) => {
+const Confirmation: React.FC<Props> = ({
+  onConfirm,
+  message,
+  placement,
+  children,
+}) => {
   return (
     <OverlayTrigger
       rootClose
       trigger={"click"}
+      placement={placement || "auto"}
       overlay={
         <Popover>
           <PopoverHeader>{message}</PopoverHeader>

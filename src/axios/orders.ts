@@ -45,3 +45,7 @@ export const updateOrder = (id: number, body: any) => {
 export const patchOrderState = (id: number) => {
   return axios.patch(`/orders/${id}`);
 };
+
+export const deleteOrder = (id: number) => {
+  return axios.delete(`/orders/${id}`);
+};
