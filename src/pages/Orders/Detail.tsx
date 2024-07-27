@@ -365,36 +365,22 @@ const Detail = () => {
             {orderId ? "Detalhe da encomenda" : "Nova encomenda"}
           </div>
           <div className="card-toolbar">
-            {order?.state_order && order?.state_order < 4 ? (
-              <Confirmation
-                onConfirm={() => {
-                  setDeleting(true);
-                  submitDeleteOrder();
-                }}
-                message={"Tem a certeza que pretende eliminar esta encomenda?"}
-                placement="bottom"
-              >
-                <Button loading={deleting} variant="danger" modifiers="me-3">
-                  Eliminar
-                </Button>
-              </Confirmation>
-            ) : null}
             <Button
-              modifiers="me-3"
+              modifiers="m-2"
               loading={submiting}
               form="orderForm"
               submit
-            >
-              Guardar
-            </Button>
-            <button
-              className="btn btn-secondary"
+              icon="FloppyDisk"
+            />
+            <Button
+              modifiers="m-2"
+              variant="secondary"
               onClick={() => {
                 navigate("/orders/list");
               }}
             >
               Voltar
-            </button>
+            </Button>
           </div>
         </div>
         <div className="card-body">
@@ -565,18 +551,40 @@ const Detail = () => {
             <div className="info-card">
               <div className="info-card-title"></div>
               <div className="info-card-body">
-                <div className="d-flex justify-content-end">
-                  <Button loading={submiting} modifiers="me-3" submit>
-                    Guardar
-                  </Button>
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => {
-                      navigate("/orders/list");
-                    }}
-                  >
-                    Voltar
-                  </button>
+                <div className="d-flex justify-content-between">
+                  {order?.state_order && order?.state_order < 4 ? (
+                    <Confirmation
+                      onConfirm={() => {
+                        setDeleting(true);
+                        submitDeleteOrder();
+                      }}
+                      message={
+                        "Tem a certeza que pretende eliminar esta encomenda?"
+                      }
+                      placement="top"
+                    >
+                      <Button
+                        loading={deleting}
+                        variant="danger"
+                        modifiers="me-3"
+                      >
+                        Eliminar
+                      </Button>
+                    </Confirmation>
+                  ) : null}
+                  <div className="d-flex">
+                    <Button loading={submiting} modifiers="me-3" submit>
+                      Guardar
+                    </Button>
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => {
+                        navigate("/orders/list");
+                      }}
+                    >
+                      Voltar
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

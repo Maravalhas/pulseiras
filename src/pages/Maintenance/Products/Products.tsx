@@ -352,6 +352,7 @@ const Products = () => {
                     setSelectedProduct(null);
                   }}
                   disabled={!selectedProduct}
+                  variant="secondary"
                 >
                   Cancelar
                 </Button>

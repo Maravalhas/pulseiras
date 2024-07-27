@@ -246,6 +246,7 @@ const Categories = () => {
                     setSelectedCategory(null);
                   }}
                   disabled={!selectedCategory}
+                  variant="secondary"
                 >
                   Cancelar
                 </Button>

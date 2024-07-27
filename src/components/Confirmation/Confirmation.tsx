@@ -28,7 +28,7 @@ const Confirmation: React.FC<Props> = ({
       overlay={
         <Popover>
           <PopoverHeader>{message}</PopoverHeader>
-          <PopoverBody>
+          <PopoverBody className="d-flex">
             <Button
               modifiers="me-2"
               onClick={() => {

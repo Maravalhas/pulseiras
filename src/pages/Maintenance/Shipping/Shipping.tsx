@@ -240,6 +240,7 @@ const Shipping = () => {
                     setSelectedShipping(null);
                   }}
                   disabled={!selectedShipping}
+                  variant="secondary"
                 >
                   Cancelar
                 </Button>
