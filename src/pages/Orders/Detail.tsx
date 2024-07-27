@@ -552,26 +552,28 @@ const Detail = () => {
               <div className="info-card-title"></div>
               <div className="info-card-body">
                 <div className="d-flex justify-content-between">
-                  {order?.state_order && order?.state_order < 4 ? (
-                    <Confirmation
-                      onConfirm={() => {
-                        setDeleting(true);
-                        submitDeleteOrder();
-                      }}
-                      message={
-                        "Tem a certeza que pretende eliminar esta encomenda?"
-                      }
-                      placement="top"
-                    >
-                      <Button
-                        loading={deleting}
-                        variant="danger"
-                        modifiers="me-3"
+                  <div>
+                    {order?.state_order && order?.state_order < 4 ? (
+                      <Confirmation
+                        onConfirm={() => {
+                          setDeleting(true);
+                          submitDeleteOrder();
+                        }}
+                        message={
+                          "Tem a certeza que pretende eliminar esta encomenda?"
+                        }
+                        placement="top"
                       >
-                        Eliminar
-                      </Button>
-                    </Confirmation>
-                  ) : null}
+                        <Button
+                          loading={deleting}
+                          variant="danger"
+                          modifiers="me-3"
+                        >
+                          Eliminar
+                        </Button>
+                      </Confirmation>
+                    ) : null}
+                  </div>
                   <div className="d-flex">
                     <Button loading={submiting} modifiers="me-3" submit>
                       Guardar
